@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer components {
+  .basic-button {
+    @apply px-5 py-2 text-[20px] text-white bg-pink-600 active:bg-pink-700 transition-all ease-in-out;
+  }
+
+  .secondary-button {
+    @apply px-3 py-1 text-[20px] text-white bg-[#EB71A8] active:bg-pink-700 transition-all ease-in-out;
+  }
+
+  .basic-input {
+    @apply px-1 py-2 w-[15em] text-[20px] bg-neutral-200 outline-none focus:outline-pink-600 transition-all ease-in-out;
+  }
+}
+
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
