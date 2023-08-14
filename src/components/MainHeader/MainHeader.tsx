@@ -3,8 +3,21 @@ import MainNavbar from '../MainNavbar/MainNavbar'
 import { signIn } from 'next-auth/react'
 import LoginButton from '../Buttons/LoginButton'
 import LogoutButton from '../Buttons/LogoutButton'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
-const MainHeader = () => {
+const MainHeader = async () => {
+  const session = await getServerSession(authOptions)
+
+  const navBarItems = [
+    { name: 'Strona główna', href: '/' },
+    { name: 'Katalog', href: '/catalog' }
+  ]
+
+  if (session) navBarItems.push({ name: 'Moja biblioteka', href: '/library' })
+
+  console.log('Session:', session)
+
   return (
     <div className=" p-5 flex flex-row justify-between items-center bg-neutral-100">
       <div className=" flex flex-row gap-x-5 items-end leading-none ">
@@ -14,27 +27,27 @@ const MainHeader = () => {
           </p>
         </Link>
 
-        <MainNavbar
-          items={[
-            { name: 'Strona główna', href: '/' },
-            { name: 'Katalog', href: '/catalog' },
-            { name: 'Moja biblioteka', href: '/library' }
-          ]}
-        />
+        <MainNavbar items={navBarItems} />
       </div>
 
       <div className=" flex flex-row gap-x-5">
-        {/* <Link className=" secondary-button" href="/login">
-          Zaloguj się
-        </Link> */}
+        {!session && (
+          <>
+            <LoginButton />
+            <Link className=" secondary-button" href="/register">
+              Zarejestruj się
+            </Link>
+          </>
+        )}
 
-        <LoginButton />
-
-        <LogoutButton />
-
-        <Link className=" secondary-button" href="/register">
-          Zarejestruj się
-        </Link>
+        {session && (
+          <div className=" flex flex-row items-center gap-x-5">
+            <p className=" text-right">
+              Zalogowany jako: <br /> <b>{session.user.user.username}</b>
+            </p>
+            <LogoutButton />
+          </div>
+        )}
       </div>
     </div>
   )
