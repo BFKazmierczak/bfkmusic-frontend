@@ -87,6 +87,7 @@ const AuthForm = ({ register, login }: AuthFormProps) => {
 
         if (result?.ok && result.url) {
           router.push('/')
+          router.refresh()
         }
       } catch (error) {
         console.log('catched an error')
