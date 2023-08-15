@@ -22,7 +22,7 @@
   }
 
   .secondary-button {
-    @apply px-3 py-1 text-[20px] text-white bg-[#EB71A8] active:bg-pink-700 transition-all ease-in-out;
+    @apply px-3 py-1 text-[20px] text-white  bg-neutral-500 active:bg-pink-700 transition-all ease-in-out;
   }
 
   .basic-input {
