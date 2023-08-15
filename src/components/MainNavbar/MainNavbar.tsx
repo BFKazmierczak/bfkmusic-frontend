@@ -20,13 +20,13 @@ const MainNavbar = ({ items }: MainNavbarProps) => {
   }, [session])
 
   return (
-    <div className=" flex flex-row gap-x-5">
+    <div className=" flex flex-row items-end text-left gap-x-4">
       {items?.map((item) => {
         return (
           <Link
             className={` ${
               pathname === item.href && 'text-pink-600 underline'
-            } text-[28px] transition-all ease-in-out`}
+            } text-2xl transition-all ease-in-out`}
             key={item.href}
             href={item.href}>
             {item.name}

@@ -7,11 +7,11 @@ const HomePage = async () => {
   const session = await getServerSession(authOptions)
 
   return (
-    <div className=" selection:bg-pink-600 mt-[100px] flex flex-col items-center ">
-      <p className=" font-bold text-[48px]">
+    <div className=" p-10 sm:p-0 selection:bg-pink-600 sm:mt-32 flex flex-col gap-y-2">
+      <p className=" font-bold text-3xl sm:text-[48px] text-left sm:text-center">
         {session ? 'Witaj ponownie!' : 'Witaj na platformie BFK Music'}
       </p>
-      <p className=" text-[24px]">
+      <p className=" text-lg sm:text-2xl text-left sm:text-center">
         Jesteś w miejscu, w którym wszystko masz pod ręką.
       </p>
 

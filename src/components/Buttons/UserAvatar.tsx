@@ -15,7 +15,7 @@ const UserAvatar = () => {
         onClick={() => setMenuOpen((prev) => !prev)}
       />
 
-      <PopupMenu open={menuOpen} setOpen={setMenuOpen} />
+      <PopupMenu open={menuOpen} setOpen={setMenuOpen} right />
 
       {/* <div
         className={` absolute ${
