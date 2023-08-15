@@ -3,6 +3,7 @@
 import BasicInput from '@/src/components/Inputs/BasicInput/BasicInput'
 import { gql, useMutation } from '@apollo/client'
 import { getSession, signIn, useSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 
@@ -210,6 +211,26 @@ const AuthForm = ({ register, login }: AuthFormProps) => {
           </button>
         </div>
       </form>
+
+      {login && (
+        <p className=" mt-2 text-center">
+          Nie posiadasz jeszcze konta?{' '}
+          <Link
+            className=" text-pink-600 active:text-pink-700e"
+            href="/register">
+            Zarejestruj się
+          </Link>
+        </p>
+      )}
+
+      {register && (
+        <p className=" mt-2 text-center">
+          Masz już konto?{' '}
+          <Link className=" text-pink-600 active:text-pink-700e" href="/login">
+            Zaloguj się
+          </Link>
+        </p>
+      )}
     </>
   )
 }
