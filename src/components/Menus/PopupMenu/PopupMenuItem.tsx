@@ -17,14 +17,16 @@ const PopupMenuItem = ({ text, href, onClick }: PopupMenuItem) => {
   return (
     <>
       {href && (
-        <Link className=" px-2 py-1 bg-neutral-400 cursor-pointer" href={href}>
+        <Link
+          className=" px-2 py-1 text-pink-600 hover:text-white hover:font-bold hover:bg-pink-600 cursor-pointer"
+          href={href}>
           {text}
         </Link>
       )}
 
       {onClick && (
         <div
-          className=" px-2 py-1 bg-neutral-400 cursor-pointer"
+          className=" px-2 py-1 text-pink-600 hover:text-white hover:font-bold hover:bg-pink-600 cursor-pointer"
           onClick={onClick}>
           {text}
         </div>
