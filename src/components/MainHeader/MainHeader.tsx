@@ -5,6 +5,7 @@ import LoginButton from '../Buttons/LoginButton'
 import LogoutButton from '../Buttons/LogoutButton'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import UserAvatar from '../Buttons/UserAvatar'
 
 const MainHeader = async () => {
   const session = await getServerSession(authOptions)
@@ -41,11 +42,11 @@ const MainHeader = async () => {
         )}
 
         {session && (
-          <div className=" flex flex-row items-center gap-x-5">
+          <div className=" flex flex-row items-center gap-x-5 ">
             <p className=" text-right">
               Zalogowany jako: <br /> <b>{session.user.user.username}</b>
             </p>
-            <LogoutButton />
+            <UserAvatar />
           </div>
         )}
       </div>
