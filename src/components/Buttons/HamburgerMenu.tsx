@@ -13,7 +13,7 @@ const HamburgerMenu = () => {
       onClick={() => setExpanded((prev) => !prev)}>
       <MenuIcon
         className={` ${expanded && 'rotate-90'} transition-all ease-in-out`}
-        style={{ fontSize: '4em' }}
+        style={{ fontSize: '3em' }}
       />
 
       <PopupMenu open={expanded} setOpen={setExpanded} left />
