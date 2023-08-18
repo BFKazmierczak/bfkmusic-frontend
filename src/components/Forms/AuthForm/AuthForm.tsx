@@ -98,7 +98,7 @@ const AuthForm = ({ register, login }: AuthFormProps) => {
 
   return (
     <>
-      <p className=" mb-5 text-center font-bold text-[24px]">
+      <p className=" mb-5 text-center font-bold text-xl">
         {register && 'Rejestracja'} {login && 'Logowanie'}
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
