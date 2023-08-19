@@ -1,30 +1,72 @@
 'use client'
 
-import MenuIcon from '@mui/icons-material/Menu'
 import { useState } from 'react'
 import PopupMenu from '../Menus/PopupMenu/PopupMenu'
+import Link from 'next/link'
+
+import MenuIcon from '@mui/icons-material/Menu'
+import HomeIcon from '@mui/icons-material/Home'
+import FindInPageIcon from '@mui/icons-material/FindInPage'
+import AudioFileIcon from '@mui/icons-material/AudioFile'
 
 const HamburgerMenu = () => {
   const [expanded, setExpanded] = useState<boolean>(false)
 
   return (
-    <div
-      className=" relative bg-pink-600 text-white sm:hidden"
-      onClick={() => setExpanded((prev) => !prev)}>
-      <MenuIcon
-        className={` ${expanded && 'rotate-90'} transition-all ease-in-out`}
-        style={{ fontSize: '3em' }}
+    <div className=" relative sm:hidden flex flex-col">
+      <div
+        className={` fixed inset-0 z-10 ${
+          !expanded && '-translate-x-48'
+        } bg-neutral-800 w-48 h-full transition-all ease-in-out`}>
+        <div className=" px-5 py-7 bg-neutral-700 h-[5.5rem] w-full" />
+
+        <div className=" flex flex-col justify-center gap-y-1 text-white">
+          <Link
+            className=" flex flex-row items-center gap-x-2 px-4 py-2 hover:bg-pink-600"
+            href="/"
+            onClick={() => setExpanded(false)}>
+            <HomeIcon />
+            Strona Główna
+          </Link>
+          <Link
+            className=" flex flex-row items-center gap-x-2 px-4 py-2 hover:bg-pink-600"
+            href="/catalog"
+            onClick={() => setExpanded(false)}>
+            <FindInPageIcon />
+            Katalog
+          </Link>
+          <Link
+            className=" flex flex-row items-center gap-x-2 px-4 py-2 hover:bg-pink-600"
+            href="/library"
+            onClick={() => setExpanded(false)}>
+            <AudioFileIcon />
+            Moja biblioteka
+          </Link>
+        </div>
+      </div>
+
+      <div
+        className={` ${
+          !expanded && 'opacity-0 hidden'
+        } fixed inset-0 z-[5] bg-black bg-opacity-[75%] transition-all ease-in-out`}
+        onClick={() => setExpanded((prev) => !prev)}
       />
 
-      <PopupMenu open={expanded} setOpen={setExpanded} left />
-
-      {/* <div
-        className={` bg-red-500 absolute ${
-          !expanded ? 'hidden -translate-x-1' : ''
-        } top-16 transition-all ease-in-out`}>
-        <p>Główna</p>
-        <p>Biblioteka</p>
-      </div> */}
+      <div
+        className={` relative flex flex-row items-center gap-x-5 z-20 text-white ${
+          expanded ? '' : ' -translate-x-[6.5rem]'
+        } transition-all ease-in-out`}>
+        <div className={` px-1 font-bold select-none w-20 bg-pink-700`}>
+          BFK <br /> Music
+        </div>
+        <MenuIcon
+          className={` ${
+            expanded && 'rotate-90'
+          } bg-pink-600 transition-all ease-in-out`}
+          style={{ fontSize: '3em' }}
+          onClick={() => setExpanded((prev) => !prev)}
+        />
+      </div>
     </div>
   )
 }
