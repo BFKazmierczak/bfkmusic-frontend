@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import PopupMenu from '../Menus/PopupMenu/PopupMenu'
+import PopupMenu from '../PopupMenu/PopupMenu'
 import Link from 'next/link'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import HomeIcon from '@mui/icons-material/Home'
 import FindInPageIcon from '@mui/icons-material/FindInPage'
 import AudioFileIcon from '@mui/icons-material/AudioFile'
+import HamburgerItem from './HamburgerItem'
 
 const HamburgerMenu = () => {
   const [expanded, setExpanded] = useState<boolean>(false)
@@ -21,27 +22,20 @@ const HamburgerMenu = () => {
         <div className=" px-5 py-7 bg-neutral-700 h-[5.5rem] w-full" />
 
         <div className=" flex flex-col justify-center gap-y-1 text-white">
-          <Link
-            className=" flex flex-row items-center gap-x-2 px-4 py-2 hover:bg-pink-600"
-            href="/"
-            onClick={() => setExpanded(false)}>
+          <HamburgerItem href="/" onClick={() => setExpanded(false)}>
             <HomeIcon />
             Strona Główna
-          </Link>
-          <Link
-            className=" flex flex-row items-center gap-x-2 px-4 py-2 hover:bg-pink-600"
-            href="/catalog"
-            onClick={() => setExpanded(false)}>
+          </HamburgerItem>
+
+          <HamburgerItem href="/catalog" onClick={() => setExpanded(false)}>
             <FindInPageIcon />
             Katalog
-          </Link>
-          <Link
-            className=" flex flex-row items-center gap-x-2 px-4 py-2 hover:bg-pink-600"
-            href="/library"
-            onClick={() => setExpanded(false)}>
+          </HamburgerItem>
+
+          <HamburgerItem href="/library" onClick={() => setExpanded(false)}>
             <AudioFileIcon />
             Moja biblioteka
-          </Link>
+          </HamburgerItem>
         </div>
       </div>
 
