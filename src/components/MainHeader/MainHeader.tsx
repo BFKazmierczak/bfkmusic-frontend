@@ -6,7 +6,7 @@ import LogoutButton from '../Buttons/LogoutButton'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import UserAvatar from '../Buttons/UserAvatar'
-import HamburgerMenu from '../Buttons/HamburgerMenu'
+import HamburgerMenu from '../Menus/HamburgerMenu/HamburgerMenu'
 
 const MainHeader = async () => {
   const session = await getServerSession(authOptions)
