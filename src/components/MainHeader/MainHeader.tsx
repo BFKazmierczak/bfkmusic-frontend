@@ -35,25 +35,16 @@ const MainHeader = async () => {
       </div>
 
       <div className=" flex flex-row gap-x-5">
-        {/* {!session && (
-          <>
-            <LoginButton />
-            <Link className=" secondary-button" href="/register">
-              Zarejestruj się
-            </Link>
-          </>
-        )} */}
-
         <div className=" flex flex-row items-center gap-x-5 ">
-          <p className=" text-right">
+          <div className=" text-right">
             {session && (
-              <p className="">
+              <div>
                 Zalogowano:
                 <br />
-              </p>
+              </div>
             )}
             <b>{session ? session.user.user.username : 'Niezalogowany'}</b>
-          </p>
+          </div>
 
           <UserAvatar />
         </div>
