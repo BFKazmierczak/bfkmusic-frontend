@@ -5,13 +5,21 @@ import { useEffect, useRef, useState } from 'react'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import AudioSlider from './AudioSlider/AudioSlider'
+import { useSession } from 'next-auth/react'
+import { Song } from '@/src/interfaces/SongsResult'
+import { useGlobalPlayer } from '../Providers/GlobalPlayerProvider'
 
 interface AudioPlayerProps {
+  song: Song
   name: string
   url: string
 }
 
-const AudioPlayer = ({ name, url }: AudioPlayerProps) => {
+const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
+  const session = useSession()
+
+  const { play, pause, changeSong } = useGlobalPlayer()
+
   const [playing, setPlaying] = useState<boolean>(false)
 
   const [currentTime, setCurrentTime] = useState<number>(0)
@@ -41,44 +49,60 @@ const AudioPlayer = ({ name, url }: AudioPlayerProps) => {
   }
 
   return (
-    <div className=" flex flex-row items-center bg-neutral-300 gap-x-5 w-72 pr-5">
-      <div className=" p-5 text-white bg-pink-600">
-        {playing ? (
-          <div onClick={() => setPlaying(false)}>
-            <PauseIcon style={{ fontSize: '2.5rem' }} />
-          </div>
-        ) : (
-          <div onClick={() => setPlaying(true)}>
-            <PlayArrowIcon style={{ fontSize: '2.5rem' }} />
-          </div>
-        )}
-      </div>
-
-      <div className=" flex flex-col gap-y-2 w-full">
-        <span>{name}</span>
-
-        <AudioSlider
-          totalTime={audioRef.current?.duration}
-          currentTime={currentTime}
-          onTimeChange={(newTime) => {
-            if (audioRef.current) {
-              audioRef.current.currentTime = newTime
-            }
-          }}
-        />
-
-        <div>
-          <span>{currentFormattedTime} /</span>
-          <span>{formatTime(audioRef.current?.duration)}</span>
+    <div className=" flex flex-row bg-neutral-300 w-72 sm:w-96 ">
+      <div className=" h-full aspect-square bg-neutral-700">
+        <div className=" flex justify-center items-center w-full h-full text-white bg-pink-600">
+          {playing ? (
+            <div
+              onClick={() => {
+                pause()
+              }}>
+              <PauseIcon style={{ fontSize: '3rem' }} />
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                changeSong(song)
+              }}>
+              <PlayArrowIcon style={{ fontSize: '3rem' }} />
+            </div>
+          )}
         </div>
       </div>
 
-      <audio
+      <div className=" flex justify-center w-full">
+        <div className=" flex flex-col w-full gap-y-2 p-3">
+          <span>{name}</span>
+
+          <AudioSlider
+            totalTime={audioRef.current?.duration}
+            currentTime={currentTime}
+            onTimeChange={(newTime) => {
+              if (audioRef.current) {
+                audioRef.current.currentTime = newTime
+              }
+            }}
+          />
+
+          <div>
+            <span>{currentFormattedTime} /</span>
+            <span>{formatTime(audioRef.current?.duration)}</span>
+          </div>
+
+          {session.data && (
+            <div>
+              <button className=" small-button w-full">Zarezerwuj</button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* <audio
         ref={audioRef}
         src={`http://localhost:1337${url}`}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => setPlaying(false)}
-      />
+      /> */}
     </div>
   )
 }
