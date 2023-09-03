@@ -21,6 +21,10 @@
     @apply text-center w-full sm:w-48 px-5 py-2 text-lg text-white bg-pink-600 active:bg-pink-700 transition-all ease-in-out;
   }
 
+  .small-button {
+    @apply basic-button px-5 py-1 text-sm;
+  }
+
   .secondary-button {
     @apply text-center w-full sm:w-48 px-3 py-1 text-lg text-white bg-neutral-500 active:bg-pink-700 transition-all ease-in-out;
   }
