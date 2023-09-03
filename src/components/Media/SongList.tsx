@@ -11,6 +11,7 @@ const SongList = ({ initialSongs }: SongListProps) => {
       {initialSongs?.map((song) => (
         <AudioPlayer
           key={song.id}
+          song={song}
           name={song.attributes.name}
           url={song.attributes.audio.data[0].attributes.url}
         />
