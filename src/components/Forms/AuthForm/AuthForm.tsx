@@ -205,7 +205,7 @@ const AuthForm = ({ register, login }: AuthFormProps) => {
             />
           )}
 
-          <button className=" mt-5 basic-button" type="submit">
+          <button className=" mt-5 basic-button w-full" type="submit">
             {register && 'Załóż konto'}
             {login && 'Zaloguj'}
           </button>
