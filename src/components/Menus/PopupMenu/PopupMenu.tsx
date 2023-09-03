@@ -43,7 +43,7 @@ const PopupMenu = ({ open, setOpen, left, right }: PopupMenuInterface) => {
 
   return (
     <div
-      className={`absolute w-48 
+      className={`absolute z-50 w-48 
         ${left && 'left-0 text-left'} 
         ${right && 'right-0 text-right'} 
         ${!open && 'hidden'}
