@@ -16,6 +16,8 @@ const AudioSlider = ({
   const [pointWidth, setPointWidth] = useState<string>()
   const [progress, setProgress] = useState<string>('0')
 
+  const [moving, setMoving] = useState<boolean>(false)
+
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -64,10 +66,24 @@ const AudioSlider = ({
   return (
     <>
       <div
-        className=" relative flex flex-row items-center bg-neutral-400 h-2 w-full"
+        className=" relative flex flex-row items-center group bg-neutral-400 hover:bg-neutral-500 
+          h-2 w-full transition-colors ease-in-out"
         ref={containerRef}
+        onMouseDown={(event) => setMoving(true)}
+        onMouseMove={
+          moving
+            ? (event) => {
+                handleProgressBarClick(event)
+              }
+            : undefined
+        }
+        onMouseUp={() => setMoving(false)}
+        onMouseLeave={() => setMoving(false)}
         onClick={handleProgressBarClick}>
-        <div className={` bg-pink-600 h-2`} style={{ width: `${progress}%` }} />
+        <div
+          className={` bg-pink-600 group-hover:bg-pink-700 h-2 transition-colors ease-in-out`}
+          style={{ width: `${progress}%` }}
+        />
         <div
           className={` absolute w-3 h-3 rounded-full bg-pink-800`}
           style={{ left: `${Number(progress) - 1}%` }}
