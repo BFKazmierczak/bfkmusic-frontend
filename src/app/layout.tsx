@@ -8,6 +8,8 @@ import { Abel } from 'next/font/google'
 import { ApolloWrapper } from '@/lib/apollo-wrapper'
 
 import NextAuthProvider from './context/Provider'
+import GlobalPlayer from '../components/Media/GlobalPlayer'
+import { GlobalPlayerProvider } from '../components/Providers/GlobalPlayerProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 const lato = Lato({ weight: '700', subsets: ['latin'] })
@@ -31,7 +33,10 @@ export default function RootLayout({
         <NextAuthProvider>
           <ApolloWrapper>
             <MainHeader />
-            <div className=" flex justify-center h-fit">{children}</div>
+            <GlobalPlayerProvider>
+              <div className=" flex justify-center h-fit">{children}</div>
+              <GlobalPlayer />
+            </GlobalPlayerProvider>
           </ApolloWrapper>
         </NextAuthProvider>
       </body>
