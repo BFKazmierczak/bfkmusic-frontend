@@ -5,9 +5,19 @@ import { createPortal } from 'react-dom'
 import { useGlobalPlayer } from '../Providers/GlobalPlayerProvider'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import Pause from '@mui/icons-material/Pause'
+import AudioSlider from './AudioSlider/AudioSlider'
 
 const GlobalPlayer = () => {
-  const { songData, playing, play, pause, changeSong } = useGlobalPlayer()
+  const {
+    songData,
+    playing,
+    play,
+    pause,
+    changeSong,
+    currentFormattedTime,
+    currentTime,
+    duration
+  } = useGlobalPlayer()
 
   const [mounted, setMounted] = useState<boolean>(false)
 
@@ -24,7 +34,7 @@ const GlobalPlayer = () => {
               <div className=" bg-pink-600 aspect-square h-full"></div>
             </div>
 
-            <div className=" flex justify-center items-center w-full">
+            <div className=" flex flex-col justify-center items-center w-full">
               {playing ? (
                 <div onClick={() => pause()}>
                   <Pause
@@ -40,6 +50,14 @@ const GlobalPlayer = () => {
                   />
                 </div>
               )}
+
+              <div className=" w-[50%]">
+                <AudioSlider
+                  currentTime={currentTime}
+                  totalTime={duration}
+                  onTimeChange={(newTime) => console.log('new time:', newTime)}
+                />
+              </div>
             </div>
           </div>,
           document.body
