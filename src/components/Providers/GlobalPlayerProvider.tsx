@@ -20,6 +20,9 @@ interface GlobalPlayerContextType {
   play: () => void
   pause: () => void
   changeSong: (newSongData: SongEntity) => void
+  currentTime: number
+  currentFormattedTime: string
+  duration: number
 }
 
 const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
@@ -27,7 +30,10 @@ const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
   playing: false,
   play: () => {},
   pause: () => {},
-  changeSong: () => {}
+  changeSong: () => {},
+  currentTime: 0,
+  currentFormattedTime: '',
+  duration: 0
 })
 
 export const useGlobalPlayer = () => {
@@ -42,6 +48,8 @@ export const GlobalPlayerProvider = ({
 
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [currentFormattedTime, setCurrentFormattedTime] = useState<string>('')
+
+  const [duration, setDuration] = useState<number>(0)
 
   const [source, setSource] = useState<string>('')
 
@@ -66,7 +74,10 @@ export const GlobalPlayerProvider = ({
     playing,
     play,
     pause,
-    changeSong
+    changeSong,
+    currentTime,
+    currentFormattedTime,
+    duration
   }
 
   function formatTime(time: number) {
@@ -105,6 +116,22 @@ export const GlobalPlayerProvider = ({
     console.log('new src:', source)
     if (source.length > 0) play()
   }, [source])
+
+  useEffect(() => {
+    if (audioRef.current && audioRef.current.src) {
+      const duration = audioRef.current.duration
+
+      console.log('duration in provider:', duration)
+
+      if (!Number.isNaN(duration)) {
+        setDuration(duration)
+      }
+    }
+  }, [audioRef.current?.src, audioRef.current?.duration])
+
+  useEffect(() => {
+    console.log('duration inside global provider:', duration)
+  }, [duration])
 
   return (
     <GlobalPlayerContext.Provider value={value}>
