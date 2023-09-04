@@ -6,11 +6,11 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import AudioSlider from './AudioSlider/AudioSlider'
 import { useSession } from 'next-auth/react'
-import { Song } from '@/src/interfaces/SongsResult'
 import { useGlobalPlayer } from '../Providers/GlobalPlayerProvider'
+import { SongEntity } from '@/src/gql/graphql'
 
 interface AudioPlayerProps {
-  song: Song
+  song: SongEntity
   name: string
   url: string
 }
