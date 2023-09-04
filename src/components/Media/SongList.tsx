@@ -1,8 +1,9 @@
 import { Song } from '@/src/interfaces/SongsResult'
 import AudioPlayer from './AudioPlayer'
+import { SongEntity } from '@/src/gql/graphql'
 
 interface SongListProps {
-  initialSongs: Song[]
+  initialSongs: SongEntity[] | undefined
 }
 
 const SongList = ({ initialSongs }: SongListProps) => {
