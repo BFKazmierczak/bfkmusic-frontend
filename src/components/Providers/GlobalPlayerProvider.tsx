@@ -1,6 +1,6 @@
 'use client'
 
-import { Song } from '@/src/interfaces/SongsResult'
+import { SongEntity } from '@/src/gql/graphql'
 import {
   createContext,
   ReactNode,
@@ -15,11 +15,11 @@ interface GlobalPlayerProviderProps {
 }
 
 interface GlobalPlayerContextType {
-  songData: Song | undefined
+  songData: SongEntity | undefined
   playing: boolean
   play: () => void
   pause: () => void
-  changeSong: (newSongData: Song) => void
+  changeSong: (newSongData: SongEntity) => void
 }
 
 const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
@@ -37,7 +37,7 @@ export const useGlobalPlayer = () => {
 export const GlobalPlayerProvider = ({
   children
 }: GlobalPlayerProviderProps) => {
-  const [songData, setSongData] = useState<Song>()
+  const [songData, setSongData] = useState<SongEntity>()
   const [playing, setPlaying] = useState<boolean>(false)
 
   const [currentTime, setCurrentTime] = useState<number>(0)
@@ -59,7 +59,7 @@ export const GlobalPlayerProvider = ({
     }
   }
 
-  const changeSong = (newSongData: Song) => setSongData(newSongData)
+  const changeSong = (newSongData: SongEntity) => setSongData(newSongData)
 
   const value: GlobalPlayerContextType = {
     songData,
@@ -96,7 +96,7 @@ export const GlobalPlayerProvider = ({
     if (songData) {
       console.log('new song data:', songData)
 
-      const url = songData.attributes.audio.data[0].attributes.url
+      const url = songData.attributes?.audio?.data[0].attributes?.url
       setSource(`http://localhost:1337${url}`)
     }
   }, [songData])
