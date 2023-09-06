@@ -19,7 +19,7 @@ interface GlobalPlayerContextType {
   playing: boolean
   play: () => void
   pause: () => void
-  changeSong: (newSongData: SongEntity) => void
+  playSong: (newSongData: SongEntity, time?: number) => void
   currentTime: number
   currentFormattedTime: string
   duration: number
@@ -30,7 +30,7 @@ const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
   playing: false,
   play: () => {},
   pause: () => {},
-  changeSong: () => {},
+  playSong: () => {},
   currentTime: 0,
   currentFormattedTime: '',
   duration: 0
@@ -55,29 +55,34 @@ export const GlobalPlayerProvider = ({
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  const play = () => {
+  const value: GlobalPlayerContextType = {
+    songData,
+    playing,
+    play,
+    pause,
+    playSong,
+    currentTime,
+    currentFormattedTime,
+    duration
+  }
+
+  function play() {
     audioRef.current?.play()
     setPlaying(true)
   }
 
-  const pause = () => {
+  function pause() {
     if (!audioRef.current?.paused) {
       audioRef.current?.pause()
       setPlaying(false)
     }
   }
 
-  const changeSong = (newSongData: SongEntity) => setSongData(newSongData)
+  function playSong(newSongData: SongEntity, time?: number) {
+    if (time) console.log('received new song data with time:', time)
 
-  const value: GlobalPlayerContextType = {
-    songData,
-    playing,
-    play,
-    pause,
-    changeSong,
-    currentTime,
-    currentFormattedTime,
-    duration
+    setSongData(newSongData)
+    if (time) setCurrentTime(time)
   }
 
   function formatTime(time: number) {

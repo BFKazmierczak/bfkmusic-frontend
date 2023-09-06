@@ -13,7 +13,7 @@ const GlobalPlayer = () => {
     playing,
     play,
     pause,
-    changeSong,
+    playSong,
     currentFormattedTime,
     currentTime,
     duration
