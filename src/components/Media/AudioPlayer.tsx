@@ -18,14 +18,20 @@ interface AudioPlayerProps {
 const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
   const session = useSession()
 
-  const { play, pause, changeSong } = useGlobalPlayer()
-
-  const [playing, setPlaying] = useState<boolean>(false)
-
-  const [currentTime, setCurrentTime] = useState<number>(0)
-  const [currentFormattedTime, setCurrentFormattedTime] = useState<string>('')
+  const { songData, play, pause, playing, playSong, currentTime, duration } =
+    useGlobalPlayer()
 
   const audioRef = useRef<HTMLAudioElement>(null)
+
+  const [innerTime, setInnerTime] = useState<number>(0)
+  const [innerFormattedTime, setInnerFormattedTime] = useState<string>('0:00')
+
+  useEffect(() => {
+    if (songData?.id === song.id) {
+      setInnerTime(currentTime)
+      setInnerFormattedTime(formatTime(currentTime))
+    }
+  }, [currentTime])
 
   useEffect(() => {
     if (playing) audioRef.current?.play()
@@ -37,15 +43,6 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
     const seconds = Math.floor(time % 60)
 
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
-  }
-
-  function handleTimeUpdate() {
-    const time = audioRef.current?.currentTime
-    if (time) {
-      const formatted = formatTime(time)
-      setCurrentTime(time)
-      setCurrentFormattedTime(formatted)
-    }
   }
 
   return (
@@ -62,7 +59,9 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
           ) : (
             <div
               onClick={() => {
-                changeSong(song)
+                const time = innerTime > 0 ? innerTime : undefined
+
+                playSong(song, time)
               }}>
               <PlayArrowIcon style={{ fontSize: '3rem' }} />
             </div>
@@ -75,8 +74,8 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
           <span>{name}</span>
 
           <AudioSlider
-            totalTime={audioRef.current?.duration}
-            currentTime={currentTime}
+            totalTime={duration}
+            currentTime={innerTime}
             onTimeChange={(newTime) => {
               if (audioRef.current) {
                 audioRef.current.currentTime = newTime
@@ -85,8 +84,12 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
           />
 
           <div>
-            <span>{currentFormattedTime} /</span>
-            <span>{formatTime(audioRef.current?.duration)}</span>
+            <span>{innerFormattedTime} /</span>
+            <span>
+              {formatTime(
+                song.attributes?.audio?.data[0].attributes?.provider_metadata
+              )}
+            </span>
           </div>
 
           {session.data && (
@@ -96,13 +99,6 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
           )}
         </div>
       </div>
-
-      {/* <audio
-        ref={audioRef}
-        src={`http://localhost:1337${url}`}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setPlaying(false)}
-      /> */}
     </div>
   )
 }
