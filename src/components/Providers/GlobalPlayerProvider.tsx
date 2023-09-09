@@ -20,6 +20,7 @@ interface GlobalPlayerContextType {
   play: () => void
   pause: () => void
   playSong: (newSongData: SongEntity, time?: number) => void
+  changeTime: (newTime: number) => void
   currentTime: number
   currentFormattedTime: string
   duration: number
@@ -31,6 +32,7 @@ const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
   play: () => {},
   pause: () => {},
   playSong: () => {},
+  changeTime: () => {},
   currentTime: 0,
   currentFormattedTime: '',
   duration: 0
@@ -61,6 +63,7 @@ export const GlobalPlayerProvider = ({
     play,
     pause,
     playSong,
+    changeTime,
     currentTime,
     currentFormattedTime,
     duration
@@ -83,6 +86,8 @@ export const GlobalPlayerProvider = ({
 
     setSongData(newSongData)
     if (time) setCurrentTime(time)
+  function changeTime(newTime: number) {
+    if (audioRef.current) audioRef.current.currentTime = newTime
   }
 
   function formatTime(time: number) {

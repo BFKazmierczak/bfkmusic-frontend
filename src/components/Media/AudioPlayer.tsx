@@ -18,8 +18,15 @@ interface AudioPlayerProps {
 const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
   const session = useSession()
 
-  const { songData, play, pause, playing, playSong, currentTime, duration } =
-    useGlobalPlayer()
+  const {
+    songData,
+    pause,
+    playing,
+    playSong,
+    changeTime,
+    currentTime,
+    duration
+  } = useGlobalPlayer()
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -85,9 +92,7 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
             totalTime={duration}
             currentTime={innerTime}
             onTimeChange={(newTime) => {
-              if (audioRef.current) {
-                audioRef.current.currentTime = newTime
-              }
+              changeTime(newTime)
             }}
           />
 
