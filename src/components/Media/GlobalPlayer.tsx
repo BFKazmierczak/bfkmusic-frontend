@@ -14,6 +14,7 @@ const GlobalPlayer = () => {
     play,
     pause,
     playSong,
+    changeTime,
     currentFormattedTime,
     currentTime,
     duration
@@ -55,7 +56,9 @@ const GlobalPlayer = () => {
                 <AudioSlider
                   currentTime={currentTime}
                   totalTime={duration}
-                  onTimeChange={(newTime) => console.log('new time:', newTime)}
+                  onTimeChange={(newTime) => {
+                    changeTime(newTime)
+                  }}
                 />
               </div>
             </div>

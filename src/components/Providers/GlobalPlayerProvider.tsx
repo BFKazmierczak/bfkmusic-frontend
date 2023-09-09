@@ -82,10 +82,16 @@ export const GlobalPlayerProvider = ({
   }
 
   function playSong(newSongData: SongEntity, time?: number) {
-    if (time) console.log('received new song data with time:', time)
-
-    setSongData(newSongData)
     if (time) setCurrentTime(time)
+    else setCurrentTime(0)
+
+    if (newSongData.id === songData?.id) {
+      play()
+    } else {
+      setSongData(newSongData)
+    }
+  }
+
   function changeTime(newTime: number) {
     if (audioRef.current) audioRef.current.currentTime = newTime
   }
@@ -106,42 +112,32 @@ export const GlobalPlayerProvider = ({
     }
   }
 
-  // useEffect(() => {
-  //   if (playing) {
-  //     console.log('src:', audioRef.current?.src)
-  //     audioRef.current?.play()
-  //   } else if (!audioRef.current?.paused) audioRef.current?.pause()
-  // }, [playing])
-
   useEffect(() => {
     if (songData) {
-      console.log('new song data:', songData)
-
       const url = songData.attributes?.audio?.data[0].attributes?.url
+
       setSource(`http://localhost:1337${url}`)
     }
   }, [songData])
 
   useEffect(() => {
-    console.log('new src:', source)
-    if (source.length > 0) play()
+    if (source.length > 0 && audioRef.current) {
+      if (currentTime > 0) {
+        audioRef.current.currentTime = currentTime
+      }
+      play()
+    }
   }, [source])
 
   useEffect(() => {
     if (audioRef.current && audioRef.current.src) {
       const duration = audioRef.current.duration
 
-      console.log('duration in provider:', duration)
-
       if (!Number.isNaN(duration)) {
         setDuration(duration)
       }
     }
   }, [audioRef.current?.src, audioRef.current?.duration])
-
-  useEffect(() => {
-    console.log('duration inside global provider:', duration)
-  }, [duration])
 
   return (
     <GlobalPlayerContext.Provider value={value}>
@@ -151,7 +147,10 @@ export const GlobalPlayerProvider = ({
         ref={audioRef}
         src={source}
         onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setPlaying(false)}
+        onEnded={() => {
+          setPlaying(false)
+          setCurrentTime(0)
+        }}
       />
     </GlobalPlayerContext.Provider>
   )
