@@ -23,6 +23,7 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
+  const [localPlaying, setLocalPlaying] = useState<boolean>(false)
   const [innerTime, setInnerTime] = useState<number>(0)
   const [innerFormattedTime, setInnerFormattedTime] = useState<string>('0:00')
 
@@ -34,9 +35,16 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
   }, [currentTime])
 
   useEffect(() => {
-    if (playing) audioRef.current?.play()
-    else if (!audioRef.current?.paused) audioRef.current?.pause()
+    if (songData?.id === song.id) {
+      if (playing) setLocalPlaying(true)
+      else if (!playing) setLocalPlaying(false)
+    }
   }, [playing])
+
+  useEffect(() => {
+    if (songData?.id !== song.id) setLocalPlaying(false)
+    else setLocalPlaying(true)
+  }, [songData])
 
   function formatTime(time: number) {
     const minutes = Math.floor(time / 60)
@@ -49,7 +57,7 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
     <div className=" flex flex-row bg-neutral-300 w-72 sm:w-96 ">
       <div className=" h-full aspect-square bg-neutral-700">
         <div className=" flex justify-center items-center w-full h-full text-white bg-pink-600">
-          {playing ? (
+          {localPlaying ? (
             <div
               onClick={() => {
                 pause()
