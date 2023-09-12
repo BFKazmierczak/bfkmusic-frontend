@@ -34,7 +34,7 @@ export default function RootLayout({
           <ApolloWrapper>
             <MainHeader />
             <GlobalPlayerProvider>
-              <div className=" flex justify-center h-fit">{children}</div>
+              <div className=" flex justify-center">{children}</div>
               <GlobalPlayer />
             </GlobalPlayerProvider>
           </ApolloWrapper>
