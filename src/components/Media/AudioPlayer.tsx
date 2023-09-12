@@ -12,11 +12,9 @@ import { useRouter } from 'next/navigation'
 
 interface AudioPlayerProps {
   song: SongEntity
-  name: string
-  url: string
 }
 
-const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
+const AudioPlayer = ({ song }: AudioPlayerProps) => {
   const session = useSession()
   const router = useRouter()
 
@@ -88,7 +86,7 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
 
       <div className=" flex justify-center w-full">
         <div className=" flex flex-col w-full gap-y-2 p-3">
-          <span>{name}</span>
+          <span>{song.attributes?.name}</span>
 
           <AudioSlider
             totalTime={duration}
