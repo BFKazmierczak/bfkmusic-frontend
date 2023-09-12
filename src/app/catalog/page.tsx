@@ -6,35 +6,33 @@ import { SongEntity, SongEntityResponseCollection } from '@/src/gql/graphql'
 import { SongsResult } from '@/src/interfaces/SongsResult'
 import { ApolloQueryResult, gql } from '@apollo/client'
 
-const GET_SONGS = graphql(
-  `
-    query GetSong($pagination: PaginationArg) {
-      songs(pagination: $pagination) {
-        data {
-          id
-          attributes {
-            name
-            description
-            audio {
-              data {
-                id
-                attributes {
-                  name
-                  alternativeText
-                  caption
-                  url
-                }
+const GET_SONGS = graphql(`
+  query GetSongs($pagination: PaginationArg) {
+    songs(pagination: $pagination) {
+      data {
+        id
+        attributes {
+          name
+          description
+          audio {
+            data {
+              id
+              attributes {
+                name
+                alternativeText
+                caption
+                url
               }
             }
-            createdAt
-            updatedAt
-            publishedAt
           }
+          createdAt
+          updatedAt
+          publishedAt
         }
       }
     }
-  `
-)
+  }
+`)
 
 const CatalogPage = async () => {
   const result = await getClient().query({
