@@ -8,6 +8,7 @@ import AudioSlider from './AudioSlider/AudioSlider'
 import { useSession } from 'next-auth/react'
 import { useGlobalPlayer } from '../Providers/GlobalPlayerProvider'
 import { SongEntity } from '@/src/gql/graphql'
+import { useRouter } from 'next/navigation'
 
 interface AudioPlayerProps {
   song: SongEntity
@@ -17,6 +18,7 @@ interface AudioPlayerProps {
 
 const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
   const session = useSession()
+  const router = useRouter()
 
   const {
     songData,
@@ -61,7 +63,7 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
   }
 
   return (
-    <div className=" flex flex-row bg-neutral-300 w-72 sm:w-96 ">
+    <div className=" flex flex-row bg-neutral-300 w-80 sm:w-96 ">
       <div className=" h-full aspect-square bg-neutral-700">
         <div className=" flex justify-center items-center w-full h-full text-white bg-pink-600">
           {localPlaying ? (
@@ -107,7 +109,11 @@ const AudioPlayer = ({ song, name, url }: AudioPlayerProps) => {
 
           {session.data && (
             <div>
-              <button className=" small-button w-full">Zarezerwuj</button>
+              <button
+                className=" small-button w-full"
+                onClick={() => router.push(`/song/${song.id}`)}>
+                Pokaż szczegóły
+              </button>
             </div>
           )}
         </div>
