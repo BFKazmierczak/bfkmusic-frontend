@@ -81,13 +81,22 @@ export const GlobalPlayerProvider = ({
     }
   }
 
-  function playSong(newSongData: SongEntity, time?: number) {
+  function playSong(
+    newSongData: SongEntity,
+    time?: number,
+    audioIndex?: number
+  ) {
     if (time) setCurrentTime(time)
     else setCurrentTime(0)
 
     if (newSongData.id === songData?.id) {
       play()
     } else {
+      const index = audioIndex || 0
+
+      const url = newSongData.attributes?.audio?.data[index].attributes?.url
+
+      setSource(`http://localhost:1337${url}`)
       setSongData(newSongData)
     }
   }
@@ -112,13 +121,13 @@ export const GlobalPlayerProvider = ({
     }
   }
 
-  useEffect(() => {
-    if (songData) {
-      const url = songData.attributes?.audio?.data[0].attributes?.url
+  // useEffect(() => {
+  //   if (songData) {
+  //     const url = songData.attributes?.audio?.data[0].attributes?.url
 
-      setSource(`http://localhost:1337${url}`)
-    }
-  }, [songData])
+  //     setSource(`http://localhost:1337${url}`)
+  //   }
+  // }, [songData])
 
   useEffect(() => {
     if (source.length > 0 && audioRef.current) {
