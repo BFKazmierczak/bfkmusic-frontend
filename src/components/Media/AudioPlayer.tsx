@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
@@ -12,9 +12,10 @@ import { useRouter } from 'next/navigation'
 
 interface AudioPlayerProps {
   song: SongEntity
+  mode?: 'overview' | 'details'
 }
 
-const AudioPlayer = ({ song }: AudioPlayerProps) => {
+const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
   const session = useSession()
   const router = useRouter()
 
@@ -27,8 +28,6 @@ const AudioPlayer = ({ song }: AudioPlayerProps) => {
     currentTime,
     duration
   } = useGlobalPlayer()
-
-  const audioRef = useRef<HTMLAudioElement>(null)
 
   const [localPlaying, setLocalPlaying] = useState<boolean>(false)
   const [innerTime, setInnerTime] = useState<number>(0)
@@ -105,7 +104,7 @@ const AudioPlayer = ({ song }: AudioPlayerProps) => {
             </span>
           </div>
 
-          {session.data && (
+          {session.data && mode === 'overview' && (
             <div>
               <button
                 className=" small-button w-full"
