@@ -1,4 +1,6 @@
 import { getClient } from '@/lib/client'
+import AudioPlayer from '@/src/components/Media/AudioPlayer'
+import SongVersion from '@/src/components/Media/SongVersion/SongVersion'
 import { graphql } from '@/src/gql'
 
 const GET_SONG = graphql(`
@@ -68,14 +70,18 @@ const SongPage = async ({ params }: SongPageProps) => {
 
   return (
     <>
-      <div className=" flex flex-col items-center justify-center">
+      <div className=" flex flex-col items-center justify-center gap-y-5">
         <span className=" font-bold text-lg">{songData.attributes?.name}</span>
+
+        <AudioPlayer song={songData} mode="details" />
 
         <span>Wersje tego utworu:</span>
 
-        {songData.attributes?.audio?.data.map((audio) => {
-          return <span>{audio.attributes?.name}</span>
-        })}
+        <div className=" flex flex-col gap-y-3">
+          {songData.attributes?.audio?.data.map((audio) => {
+            return <SongVersion song={songData} audio={audio} />
+          })}
+        </div>
       </div>
     </>
   )
