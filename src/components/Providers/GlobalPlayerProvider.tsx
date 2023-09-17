@@ -19,7 +19,11 @@ interface GlobalPlayerContextType {
   playing: boolean
   play: () => void
   pause: () => void
-  playSong: (newSongData: SongEntity, time?: number) => void
+  playSong: (
+    newSongData: SongEntity,
+    time?: number,
+    audioIndex?: number
+  ) => void
   changeTime: (newTime: number) => void
   currentTime: number
   currentFormattedTime: string
@@ -89,15 +93,36 @@ export const GlobalPlayerProvider = ({
     if (time) setCurrentTime(time)
     else setCurrentTime(0)
 
+    let currentIndex: number = 0
+
+    const currentAudio = songData?.attributes?.audio?.data.find(
+      (audio, index) => {
+        if (audio.attributes?.url === source) {
+          currentIndex = index
+        }
+        return audio.attributes?.url === source
+      }
+    )
+
     if (newSongData.id === songData?.id) {
-      play()
+      if (audioIndex !== undefined) {
+        if (audioIndex === currentIndex) play()
+        else {
+          const newSource =
+            songData?.attributes?.audio?.data[audioIndex].attributes?.url
+
+          if (newSource) setSource(newSource)
+        }
+      } else play()
     } else {
       const index = audioIndex || 0
 
       const url = newSongData.attributes?.audio?.data[index].attributes?.url
 
-      setSource(`http://localhost:1337${url}`)
-      setSongData(newSongData)
+      if (url) {
+        setSource(url)
+        setSongData(newSongData)
+      }
     }
   }
 
@@ -154,7 +179,7 @@ export const GlobalPlayerProvider = ({
 
       <audio
         ref={audioRef}
-        src={source}
+        src={`http://localhost:1337${source}`}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => {
           setPlaying(false)
