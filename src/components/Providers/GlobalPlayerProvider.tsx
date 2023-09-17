@@ -28,6 +28,7 @@ interface GlobalPlayerContextType {
   currentTime: number
   currentFormattedTime: string
   duration: number
+  source: string
 }
 
 const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
@@ -39,7 +40,8 @@ const GlobalPlayerContext = createContext<GlobalPlayerContextType>({
   changeTime: () => {},
   currentTime: 0,
   currentFormattedTime: '',
-  duration: 0
+  duration: 0,
+  source: ''
 })
 
 export const useGlobalPlayer = () => {
@@ -70,7 +72,8 @@ export const GlobalPlayerProvider = ({
     changeTime,
     currentTime,
     currentFormattedTime,
-    duration
+    duration,
+    source
   }
 
   function play() {
@@ -145,14 +148,6 @@ export const GlobalPlayerProvider = ({
       setCurrentFormattedTime(formatted)
     }
   }
-
-  // useEffect(() => {
-  //   if (songData) {
-  //     const url = songData.attributes?.audio?.data[0].attributes?.url
-
-  //     setSource(`http://localhost:1337${url}`)
-  //   }
-  // }, [songData])
 
   useEffect(() => {
     if (source.length > 0 && audioRef.current) {
