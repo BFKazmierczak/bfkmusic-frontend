@@ -22,13 +22,15 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
     playSong,
     changeTime,
     currentTime,
-    duration,
     source
   } = useGlobalPlayer()
 
   const [localPlaying, setLocalPlaying] = useState<boolean>(false)
   const [innerTime, setInnerTime] = useState<number>(0)
   const [innerFormattedTime, setInnerFormattedTime] = useState<string>('0:00')
+
+  const audioDuration = song.attributes?.audio?.data[audioIndex].attributes
+    ?.duration as number
 
   function formatTime(time: number) {
     const minutes = Math.floor(time / 60)
@@ -96,7 +98,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
           <span>{song.attributes?.name}</span>
 
           <AudioSlider
-            totalTime={duration}
+            totalTime={audioDuration}
             currentTime={innerTime}
             onTimeChange={(newTime) => {
               changeTime(newTime)
@@ -105,12 +107,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
 
           <div>
             <span>{innerFormattedTime} /</span>
-            <span>
-              {formatTime(
-                song.attributes?.audio?.data[audioIndex].attributes
-                  ?.provider_metadata
-              )}
-            </span>
+            <span>{formatTime(audioDuration)}</span>
           </div>
 
           {/* {session.data && mode === 'overview' && (

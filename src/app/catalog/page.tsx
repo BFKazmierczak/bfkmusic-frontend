@@ -22,6 +22,7 @@ const GET_SONGS = graphql(`
                 alternativeText
                 caption
                 url
+                duration
               }
             }
           }
