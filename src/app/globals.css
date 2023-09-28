@@ -17,16 +17,20 @@
 }
 
 @layer components {
+  .disabled-button {
+    @apply disabled:bg-neutral-500 disabled:text-neutral-400 disabled:cursor-not-allowed;
+  }
+
   .basic-button {
-    @apply text-center w-full sm:w-48 px-5 py-2 text-lg text-white bg-pink-600 active:bg-pink-700 transition-all ease-in-out;
+    @apply text-center w-full sm:w-48 px-5 py-2 text-lg text-white disabled-button enabled:bg-pink-600 active:bg-pink-700  transition-all ease-in-out;
   }
 
   .small-button {
-    @apply basic-button px-5 py-1 text-sm;
+    @apply basic-button disabled-button px-5 py-1 text-sm;
   }
 
   .secondary-button {
-    @apply text-center w-full sm:w-48 px-3 py-1 text-lg text-white bg-neutral-500 active:bg-pink-700 transition-all ease-in-out;
+    @apply text-center w-full sm:w-48 px-3 py-1 text-lg text-white bg-neutral-500 active:bg-pink-700 disabled-button transition-all ease-in-out;
   }
 
   .basic-input {
