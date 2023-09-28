@@ -1,9 +1,12 @@
 import { getClient } from '@/lib/client'
-import AudioPlayer from '@/src/components/Media/AudioPlayer'
-import SongVersion from '@/src/components/Media/SongVersion/SongVersion'
 import { graphql } from '@/src/gql'
 
-const GET_SONG = graphql(`
+import SongViewDetailed from '@/src/components/Media/SongViewDetailed/SongViewDetailed'
+import { gql } from '@apollo/client'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+
+const GET_SONG = gql`
   query GetSong($id: ID) {
     song(id: $id) {
       data {
@@ -25,12 +28,34 @@ const GET_SONG = graphql(`
                 ext
                 mime
                 size
+                duration
                 url
                 previewUrl
                 provider
                 provider_metadata
                 createdAt
                 updatedAt
+              }
+            }
+          }
+          comments {
+            data {
+              id
+              attributes {
+                fileId
+                content
+                timeRange
+                createdAt
+                updatedAt
+                publishedAt
+                user {
+                  data {
+                    id
+                    attributes {
+                      username
+                    }
+                  }
+                }
               }
             }
           }
@@ -41,7 +66,7 @@ const GET_SONG = graphql(`
       }
     }
   }
-`)
+`
 
 interface SongPageProps {
   params: {
@@ -50,41 +75,40 @@ interface SongPageProps {
 }
 
 const SongPage = async ({ params }: SongPageProps) => {
-  const songQuery = await getClient().query({
-    query: GET_SONG,
-    variables: {
-      id: params.songId
-    }
-  })
+  const session = await getServerSession(authOptions)
 
-  const songData = songQuery.data.song?.data
+  if (session) {
+    const songQuery = await getClient().query({
+      query: GET_SONG,
+      variables: {
+        id: params.songId
+      }
+    })
 
-  console.log('song data:', songData)
+    const songData = songQuery.data.song?.data
 
-  if (!songData)
-    return (
-      <div className=" flex justify-center items-center  bg-red-500">
-        Nie odnaleziono utworu
-      </div>
-    )
+    console.log(songData?.attributes?.comments?.data)
 
-  return (
-    <>
-      <div className=" flex flex-col items-center justify-center gap-y-5">
-        <span className=" font-bold text-lg">{songData.attributes?.name}</span>
-
-        <AudioPlayer song={songData} mode="details" />
-
-        <span>Wersje tego utworu:</span>
-
-        <div className=" flex flex-col gap-y-3">
-          {songData.attributes?.audio?.data.map((audio) => {
-            return <SongVersion song={songData} audio={audio} />
-          })}
+    if (!songData)
+      return (
+        <div className=" flex justify-center items-center  bg-red-500">
+          Nie odnaleziono utworu
         </div>
-      </div>
-    </>
-  )
+      )
+
+    return (
+      <>
+        <div className=" flex flex-col items-center justify-center gap-y-5">
+          <span className=" font-bold text-lg">
+            {songData.attributes?.name}
+          </span>
+
+          <SongViewDetailed song={songData} />
+        </div>
+      </>
+    )
+  } else {
+  }
 }
 
 export default SongPage
