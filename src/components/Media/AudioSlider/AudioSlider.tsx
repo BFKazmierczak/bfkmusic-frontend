@@ -1,20 +1,26 @@
 'use client'
 
+import getTimeRangeNumberArray from '@/src/utils/getTimeRangeNumberArray'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface AudioSliderProps {
   totalTime: number
   currentTime: number
+  highlight?: string
   onTimeChange?: (newTime: number) => void
 }
 
 const AudioSlider = ({
   totalTime,
   currentTime,
+  highlight,
   onTimeChange
 }: AudioSliderProps) => {
   const [pointWidth, setPointWidth] = useState<string>()
   const [progress, setProgress] = useState<string>('0')
+
+  const [highlightRange, setHighlightRange] = useState<number[]>()
+  const [highlightWidth, setHighlightWidth] = useState<string>('0')
 
   const [moving, setMoving] = useState<boolean>(false)
 
@@ -33,6 +39,23 @@ const AudioSlider = ({
   useEffect(() => {
     setProgress(((currentTime / totalTime) * 100).toFixed(2))
   }, [currentTime])
+
+  useEffect(() => {
+    if (highlight) {
+      setHighlightRange(getTimeRangeNumberArray(highlight.split(':')))
+    } else setHighlightRange(undefined)
+  }, [highlight])
+
+  useEffect(() => {
+    if (highlightRange) {
+      setHighlightWidth(
+        (
+          ((highlightRange[1] - highlightRange[0]) / totalTime) * 100 +
+          2
+        ).toFixed(2)
+      )
+    }
+  }, [highlightRange])
 
   function handleProgressBarClick(
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -85,9 +108,18 @@ const AudioSlider = ({
           style={{ width: `${progress}%` }}
         />
         <div
-          className={` absolute w-3 h-3 rounded-full bg-pink-800`}
+          className={` absolute w-3 h-3 rounded-full z-10 bg-pink-800`}
           style={{ left: `${Number(progress) - 1}%` }}
         />
+        {highlightRange && highlightWidth && (
+          <div
+            className={` absolute h-3 bg-opacity-50 bg-blue-700`}
+            style={{
+              left: `${(highlightRange[0] / totalTime) * 100}%`,
+              width: `${highlightWidth}%`
+            }}
+          />
+        )}
       </div>
     </>
   )
