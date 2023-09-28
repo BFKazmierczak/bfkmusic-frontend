@@ -47,7 +47,7 @@ const HamburgerMenu = () => {
       />
 
       <div
-        className={` relative flex flex-row items-center gap-x-5 z-20 text-white ${
+        className={` relative flex flex-row items-center gap-x-5 z-10 text-white ${
           expanded ? '' : ' -translate-x-[6.5rem]'
         } transition-all ease-in-out`}>
         <div className={` px-1 font-bold select-none w-20 bg-pink-700`}>
