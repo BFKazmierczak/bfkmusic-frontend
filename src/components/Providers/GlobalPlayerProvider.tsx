@@ -154,19 +154,10 @@ export const GlobalPlayerProvider = ({
       if (currentTime > 0) {
         audioRef.current.currentTime = currentTime
       }
+
       play()
     }
   }, [source])
-
-  useEffect(() => {
-    if (audioRef.current && audioRef.current.src) {
-      const duration = audioRef.current.duration
-
-      if (!Number.isNaN(duration)) {
-        setDuration(duration)
-      }
-    }
-  }, [audioRef.current?.src, audioRef.current?.duration])
 
   return (
     <GlobalPlayerContext.Provider value={value}>

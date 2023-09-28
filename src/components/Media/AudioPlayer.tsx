@@ -26,7 +26,8 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
     playSong,
     changeTime,
     currentTime,
-    duration
+    duration,
+    source
   } = useGlobalPlayer()
 
   const [localPlaying, setLocalPlaying] = useState<boolean>(false)
@@ -41,11 +42,22 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
   }, [currentTime])
 
   useEffect(() => {
-    if (songData?.id === song.id) {
+    if (
+      songData?.id === song.id &&
+      songData?.attributes?.audio?.data[0].attributes?.url === source
+    ) {
       if (playing) setLocalPlaying(true)
       else if (!playing) setLocalPlaying(false)
     }
   }, [playing])
+
+  useEffect(() => {
+    if (
+      source &&
+      source !== songData?.attributes?.audio?.data[0].attributes?.url
+    )
+      setLocalPlaying(false)
+  }, [source])
 
   useEffect(() => {
     if (songData?.id !== song.id) setLocalPlaying(false)
@@ -75,7 +87,7 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
               onClick={() => {
                 const time = innerTime > 0 ? innerTime : undefined
 
-                playSong(song, time)
+                playSong(song, time, 0)
               }}>
               <PlayArrowIcon style={{ fontSize: '3rem' }} />
             </div>
@@ -97,11 +109,11 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
 
           <div>
             <span>{innerFormattedTime} /</span>
-            <span>
+            {/* <span>
               {formatTime(
-                song.attributes?.audio?.data[0].attributes?.provider_metadata
+                song.attributes?.audio?.data[0].attributes
               )}
-            </span>
+            </span> */}
           </div>
 
           {session.data && mode === 'overview' && (
