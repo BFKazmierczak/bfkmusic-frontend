@@ -7,11 +7,12 @@ import { useGlobalPlayer } from '../../Providers/GlobalPlayerProvider'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import AudioSlider from '../AudioSlider/AudioSlider'
+import useGlobalStore from '../../GlobalStore/zustand'
 
-interface SongPlayerProps {
+export interface SongPlayerProps {
   song: SongEntity
   audioIndex?: number
-  children: ReactNode
+  children?: ReactNode
 }
 
 const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
@@ -24,6 +25,8 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
     currentTime,
     source
   } = useGlobalPlayer()
+
+  const { highlight } = useGlobalStore()
 
   const [localPlaying, setLocalPlaying] = useState<boolean>(false)
   const [innerTime, setInnerTime] = useState<number>(0)
@@ -100,6 +103,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
           <AudioSlider
             totalTime={audioDuration}
             currentTime={innerTime}
+            highlight={highlight}
             onTimeChange={(newTime) => {
               changeTime(newTime)
             }}
@@ -110,6 +114,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
             <span>{formatTime(audioDuration)}</span>
           </div>
 
+          {children}
           {/* {session.data && mode === 'overview' && (
             <div>
               <button
