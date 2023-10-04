@@ -67,6 +67,11 @@ const SongPlayerAction = ({
   const [selectedComment, setSelectedComment] = useState<string>()
 
   const [commentValue, setCommentValue] = useState<string>('')
+  const [rangeSelection, setRangeSelection] = useState<boolean>(false)
+
+  const peaks =
+    props.song.attributes?.audio?.data[audioIndex].attributes?.waveform?.data
+      ?.attributes?.peaks
 
   const [createComment] = useMutation(CREATE_SONG_COMMENT, {
     onCompleted: (data) => {
@@ -108,22 +113,25 @@ const SongPlayerAction = ({
         </div>
       </SongPlayer>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <div
-          className={` absolute inset-5 p-5 bg-white border-2 border-gray-500 shadow-xl ${
-            modalOpen ? 'bg-opacity-100' : 'bg-opacity-0'
-          } transition-all ease-in-out`}>
-          <SongPlayer {...props} />
 
-          <div className=" flex flex-col gap-y-5 mt-5">
-            <div className=" flex flex-col gap-y-2">
-              <textarea
-                className=" basic-input w-full resize-none"
-                rows={3}
-                placeholder="Napisz komentarz..."
-                value={commentValue}
-                onChange={(event) => setCommentValue(event.target.value)}
-              />
+            {peaks && (
+              <div className=" relative z-[50] py-5 sm:w-[32rem] md:w-[48rem] lg:w-[64rem] overflow-x-auto">
+                <Waveform peaks={peaks} selecting={rangeSelection} />
+              </div>
+            )}
+
+                  <span
+                    className=" flex justify-center items-center z-[40] px-1 gap-x-1 text-white bg-pink-500 cursor-pointer"
+                    onClick={() => setRangeSelection((prev) => !prev)}>
+                    {rangeSelection ? (
+                      'Anuluj'
+                    ) : (
+                      <>
+                        <SettingsEthernetIcon /> Wyznacz zakres
+                      </>
+                    )}
+                  </span>
+                </div>
 
               <button
                 className=" basic-button"

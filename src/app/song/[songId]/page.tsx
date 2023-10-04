@@ -6,7 +6,7 @@ import { gql } from '@apollo/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-const GET_SONG = gql`
+const GET_SONG = graphql(`
   query GetSong($id: ID) {
     song(id: $id) {
       data {
@@ -35,6 +35,14 @@ const GET_SONG = gql`
                 provider_metadata
                 createdAt
                 updatedAt
+                waveform {
+                  data {
+                    id
+                    attributes {
+                      peaks
+                    }
+                  }
+                }
               }
             }
           }
@@ -66,7 +74,7 @@ const GET_SONG = gql`
       }
     }
   }
-`
+`)
 
 interface SongPageProps {
   params: {
