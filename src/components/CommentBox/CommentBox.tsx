@@ -5,7 +5,7 @@ import 'moment/locale/pl'
 import { useSession } from 'next-auth/react'
 
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface CommentBoxProps {
   data: CommentEntity
@@ -15,6 +15,8 @@ interface CommentBoxProps {
 }
 
 const CommentBox = ({ data, userId, selected, onSelect }: CommentBoxProps) => {
+  const commentRef = useRef<HTMLDivElement>(null)
+
   const formattedDate = moment(data.attributes?.createdAt).format('LLL')
 
   return (
@@ -22,8 +24,18 @@ const CommentBox = ({ data, userId, selected, onSelect }: CommentBoxProps) => {
       className={` flex flex-col gap-y-1 shadow-md p-3
         w-full md:w-[40rem] ${
           userId === data.attributes?.user?.data?.id && 'bg-pink-100'
-        } ${selected && ' outline -outline-offset-2 outline-pink-700'}`}
+        } ${
+        selected && ' outline -outline-offset-2 outline-pink-700'
+      } cursor-pointer`}
+      ref={commentRef}
       onClick={() => {
+        if (commentRef.current) {
+          commentRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          })
+        }
+
         if (!selected && onSelect && data.attributes && data.id) {
           onSelect(data.id, data.attributes.timeRange)
         }

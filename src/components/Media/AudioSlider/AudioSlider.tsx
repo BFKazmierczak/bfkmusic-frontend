@@ -108,7 +108,7 @@ const AudioSlider = ({
           style={{ width: `${progress}%` }}
         />
         <div
-          className={` absolute w-3 h-3 rounded-full z-10 bg-pink-800`}
+          className={` absolute w-3 h-3 rounded-full z-auto bg-pink-800`}
           style={{ left: `${Number(progress) - 1}%` }}
         />
         {highlightRange && highlightWidth && (

@@ -30,12 +30,12 @@ const GlobalPlayer = () => {
     <>
       {mounted &&
         createPortal(
-          <div className=" absolute bottom-0 flex flex-row w-full h-20 border-t-2 border-neutral-400">
+          <div className=" fixed z-50 bottom-0 flex flex-row w-full h-20 border-t-2 border-neutral-400">
             <div className=" absolute left-0 bg-neutral-200 aspect-square h-full p-2">
               <div className=" bg-pink-600 aspect-square h-full"></div>
             </div>
 
-            <div className=" flex flex-col justify-center items-center w-full">
+            <div className=" flex flex-col justify-center items-center w-full bg-white">
               {playing ? (
                 <div onClick={() => pause()}>
                   <Pause
