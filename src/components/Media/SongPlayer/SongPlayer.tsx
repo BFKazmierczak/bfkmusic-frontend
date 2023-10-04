@@ -7,7 +7,7 @@ import { useGlobalPlayer } from '../../Providers/GlobalPlayerProvider'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import AudioSlider from '../AudioSlider/AudioSlider'
-import useGlobalStore from '../../GlobalStore/zustand'
+import useHighlightStore from '../../../stores/highlightStore'
 
 export interface SongPlayerProps {
   song: SongEntity
@@ -26,7 +26,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
     source
   } = useGlobalPlayer()
 
-  const { highlight } = useGlobalStore()
+  const { highlight } = useHighlightStore()
 
   const [localPlaying, setLocalPlaying] = useState<boolean>(false)
   const [innerTime, setInnerTime] = useState<number>(0)
@@ -35,12 +35,18 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
   const audioDuration = song.attributes?.audio?.data[audioIndex].attributes
     ?.duration as number
 
+  const file = song.attributes?.audio?.data[audioIndex]
+
   function formatTime(time: number) {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
 
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
   }
+
+  useEffect(() => {
+    console.log('HIGHLIGHT:', highlight)
+  }, [highlight])
 
   useEffect(() => {
     if (thisPlaying) {
@@ -73,7 +79,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
   }, [source])
 
   return (
-    <div className=" flex flex-row bg-neutral-300 w-80 sm:w-96 ">
+    <div className=" flex flex-row bg-neutral-300 w-80 sm:w-96 z-[7 0]">
       <div className=" h-full aspect-square bg-neutral-700">
         <div className=" flex justify-center items-center w-full h-full text-white bg-pink-600">
           {localPlaying ? (
@@ -98,12 +104,18 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
 
       <div className=" flex justify-center w-full">
         <div className=" flex flex-col w-full gap-y-2 p-3">
-          <span>{song.attributes?.name}</span>
+          <span>{song.attributes?.audio?.data[audioIndex].id}</span>
+
+          <span>
+            {song.attributes?.audio?.data[audioIndex].attributes?.name}
+          </span>
 
           <AudioSlider
             totalTime={audioDuration}
             currentTime={innerTime}
-            highlight={highlight}
+            highlight={
+              highlight[1] === Number(file?.id) ? highlight[0] : undefined
+            }
             onTimeChange={(newTime) => {
               changeTime(newTime)
             }}
