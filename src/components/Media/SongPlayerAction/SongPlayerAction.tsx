@@ -63,6 +63,7 @@ const SongPlayerAction = ({
   const { setHighlight } = useHighlightStore()
 
   const commentContainerRef = useRef<HTMLDivElement>(null)
+  const waveformContainerRef = useRef<HTMLDivElement>(null)
 
   const [comments, setComments] = useState<CommentEntity[]>(() => {
     const data = props.song.attributes?.comments?.data
@@ -147,8 +148,21 @@ const SongPlayerAction = ({
             <SongPlayer {...props} />
 
             {peaks && (
-              <div className=" relative z-[50] py-5 sm:w-[32rem] md:w-[48rem] lg:w-[64rem] overflow-x-auto">
-                <Waveform peaks={peaks} selecting={rangeSelection} />
+              <div
+                className=" relative z-[50] py-5 sm:w-[32rem] md:w-[48rem] lg:w-[64rem]  overflow-x-auto"
+                ref={waveformContainerRef}>
+                <Waveform
+                  peaks={peaks}
+                  selecting={rangeSelection}
+                  onScroll={(left, visibleWidth) => {
+                    if (waveformContainerRef.current) {
+                      waveformContainerRef.current.scrollBy({
+                        left,
+                        behavior: 'smooth'
+                      })
+                    }
+                  }}
+                />
               </div>
             )}
 
