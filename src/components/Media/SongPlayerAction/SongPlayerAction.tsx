@@ -152,6 +152,8 @@ const SongPlayerAction = ({
                 className=" relative z-[50] py-5 sm:w-[32rem] md:w-[48rem] lg:w-[64rem]  overflow-x-auto"
                 ref={waveformContainerRef}>
                 <Waveform
+                  totalTime={props.song.attributes?.audio?.data[audioIndex].attributes?.duration}
+              
                   peaks={peaks}
                   selecting={rangeSelection}
                   onScroll={(left, visibleWidth) => {

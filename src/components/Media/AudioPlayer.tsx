@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react'
 import { useGlobalPlayer } from '../Providers/GlobalPlayerProvider'
 import { SongEntity } from '@/src/gql/graphql'
 import { useRouter } from 'next/navigation'
+import useGlobalPlayerStore from '@/src/stores/globalPlayerStore'
 
 interface AudioPlayerProps {
   song: SongEntity
@@ -19,6 +20,17 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
   const session = useSession()
   const router = useRouter()
 
+  // const {
+  //   songData,
+  //   pause,
+  //   playing,
+  //   playSong,
+  //   changeTime,
+  //   currentTime,
+  //   duration,
+  //   source
+  // } = useGlobalPlayer()
+
   const {
     songData,
     pause,
@@ -26,9 +38,8 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
     playSong,
     changeTime,
     currentTime,
-    duration,
     source
-  } = useGlobalPlayer()
+  } = useGlobalPlayerStore()
 
   const [localPlaying, setLocalPlaying] = useState<boolean>(false)
   const [innerTime, setInnerTime] = useState<number>(0)
@@ -64,13 +75,6 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
     else setLocalPlaying(true)
   }, [songData])
 
-  function formatTime(time: number) {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
-  }
-
   return (
     <div className=" flex flex-row bg-neutral-300 w-80 sm:w-96 ">
       <div className=" h-full aspect-square bg-neutral-700">
@@ -100,7 +104,7 @@ const AudioPlayer = ({ song, mode = 'overview' }: AudioPlayerProps) => {
           <span>{song.attributes?.name}</span>
 
           <AudioSlider
-            totalTime={duration}
+            totalTime={0}
             currentTime={innerTime}
             onTimeChange={(newTime) => {
               changeTime(newTime)

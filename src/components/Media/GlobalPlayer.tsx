@@ -6,19 +6,33 @@ import { useGlobalPlayer } from '../Providers/GlobalPlayerProvider'
 import PlayArrow from '@mui/icons-material/PlayArrow'
 import Pause from '@mui/icons-material/Pause'
 import AudioSlider from './AudioSlider/AudioSlider'
+import useGlobalPlayerStore from '@/src/stores/globalPlayerStore'
+import formatTime from '@/src/utils/formatTime'
 
 const GlobalPlayer = () => {
+  // const {
+  //   songData,
+  //   playing,
+  //   play,
+  //   pause,
+  //   playSong,
+  //   changeTime,
+  //   currentFormattedTime,
+  //   currentTime,
+  //   duration
+  // } = useGlobalPlayer()
+
   const {
     songData,
     playing,
-    play,
-    pause,
     playSong,
+    pause,
     changeTime,
-    currentFormattedTime,
     currentTime,
+    setCurrentTime,
+    currentFormattedTime,
     duration
-  } = useGlobalPlayer()
+  } = useGlobalPlayerStore()
 
   const [mounted, setMounted] = useState<boolean>(false)
 
@@ -36,21 +50,30 @@ const GlobalPlayer = () => {
             </div>
 
             <div className=" flex flex-col justify-center items-center w-full bg-white">
-              {playing ? (
-                <div onClick={() => pause()}>
-                  <Pause
-                    className=" text-pink-600"
-                    style={{ fontSize: '3rem' }}
-                  />
-                </div>
-              ) : (
-                <div onClick={() => play()}>
-                  <PlayArrow
-                    className=" text-pink-600"
-                    style={{ fontSize: '3rem' }}
-                  />
-                </div>
-              )}
+              <div className=" flex justify-between items-end w-[50%]">
+                {currentFormattedTime}
+
+                {playing ? (
+                  <div onClick={() => pause()}>
+                    <Pause
+                      className=" text-pink-600"
+                      style={{ fontSize: '3rem' }}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => {
+                      if (songData) playSong(songData)
+                    }}>
+                    <PlayArrow
+                      className=" text-pink-600"
+                      style={{ fontSize: '3rem' }}
+                    />
+                  </div>
+                )}
+
+                {formatTime(duration)}
+              </div>
 
               <div className=" w-[50%]">
                 <AudioSlider

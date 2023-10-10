@@ -10,6 +10,7 @@ import { ApolloWrapper } from '@/lib/apollo-wrapper'
 import NextAuthProvider from './context/Provider'
 import GlobalPlayer from '../components/Media/GlobalPlayer'
 import { GlobalPlayerProvider } from '../components/Providers/GlobalPlayerProvider'
+import GlobalAudio from '../components/Media/GlobalAudio/GlobalAudio'
 
 const inter = Inter({ subsets: ['latin'] })
 const lato = Lato({ weight: '700', subsets: ['latin'] })
@@ -33,10 +34,9 @@ export default function RootLayout({
         <NextAuthProvider>
           <ApolloWrapper>
             <MainHeader />
-            <GlobalPlayerProvider>
-              <div className=" flex justify-center">{children}</div>
-              <GlobalPlayer />
-            </GlobalPlayerProvider>
+            <div className=" flex justify-center">{children}</div>
+            <GlobalPlayer />
+            <GlobalAudio />
           </ApolloWrapper>
         </NextAuthProvider>
       </body>

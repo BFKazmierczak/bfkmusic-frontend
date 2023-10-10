@@ -8,6 +8,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import AudioSlider from '../AudioSlider/AudioSlider'
 import useHighlightStore from '../../../stores/highlightStore'
+import useGlobalPlayerStore from '@/src/stores/globalPlayerStore'
+import formatTime from '@/src/utils/formatTime'
 
 export interface SongPlayerProps {
   song: SongEntity
@@ -24,7 +26,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
     changeTime,
     currentTime,
     source
-  } = useGlobalPlayer()
+  } = useGlobalPlayerStore()
 
   const { highlight } = useHighlightStore()
 
@@ -36,13 +38,6 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
     ?.duration as number
 
   const file = song.attributes?.audio?.data[audioIndex]
-
-  function formatTime(time: number) {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
-  }
 
   useEffect(() => {
     console.log('HIGHLIGHT:', highlight)
@@ -57,10 +52,16 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
 
   useEffect(() => {
     if (thisPlaying) {
+      console.log('new time:', currentTime)
+
       setInnerTime(currentTime)
       setInnerFormattedTime(formatTime(currentTime))
     }
   }, [currentTime])
+
+  useEffect(() => {
+    console.log('innertime:', innerTime)
+  }, [innerTime])
 
   useEffect(() => {
     console.log('Source:', source)
@@ -117,6 +118,7 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
               highlight[1] === Number(file?.id) ? highlight[0] : undefined
             }
             onTimeChange={(newTime) => {
+              console.log('time change!')
               changeTime(newTime)
             }}
           />
