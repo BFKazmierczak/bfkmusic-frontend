@@ -16,6 +16,7 @@ import { gql, useMutation } from '@apollo/client'
 import { CommentEntity, UploadFileEntity } from '@/src/gql/graphql'
 import { graphql } from '@/src/gql'
 import Waveform from '../Waveform/Waveform'
+import useGlobalPlayerStore from '@/src/stores/globalPlayerStore'
 
 const CREATE_SONG_COMMENT = graphql(`
   mutation CreateComment(
@@ -60,6 +61,16 @@ const SongPlayerAction = ({
 }: SongPlayerActionProps) => {
   const session = useSession()
 
+  const {
+    songData,
+    pause,
+    playing,
+    playSong,
+    changeTime,
+    currentTime,
+    source
+  } = useGlobalPlayerStore()
+
   const { setHighlight } = useHighlightStore()
 
   const commentContainerRef = useRef<HTMLDivElement>(null)
@@ -87,6 +98,9 @@ const SongPlayerAction = ({
   const file = props.song.attributes?.audio?.data[
     audioIndex
   ] as UploadFileEntity
+
+  const duration = props.song.attributes?.audio?.data[audioIndex].attributes
+    ?.duration as number
 
   const [createComment] = useMutation(CREATE_SONG_COMMENT, {
     onCompleted: (data) => {
@@ -152,11 +166,11 @@ const SongPlayerAction = ({
                 className=" relative z-[50] py-5 sm:w-[32rem] md:w-[48rem] lg:w-[64rem]  overflow-x-auto"
                 ref={waveformContainerRef}>
                 <Waveform
-                  totalTime={props.song.attributes?.audio?.data[audioIndex].attributes?.duration}
-              
+                  totalTime={duration}
+                  currentTime={currentTime}
                   peaks={peaks}
                   selecting={rangeSelection}
-                  onScroll={(left, visibleWidth) => {
+                  onScroll={(left) => {
                     if (waveformContainerRef.current) {
                       waveformContainerRef.current.scrollBy({
                         left,
