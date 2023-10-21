@@ -2,7 +2,6 @@
 
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { SongEntity } from '@/src/gql/graphql'
-import { useGlobalPlayer } from '../../Providers/GlobalPlayerProvider'
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
@@ -34,8 +33,12 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
   const [innerTime, setInnerTime] = useState<number>(0)
   const [innerFormattedTime, setInnerFormattedTime] = useState<string>('0:00')
 
-  const audioDuration = song.attributes?.audio?.data[audioIndex].attributes
-    ?.duration as number
+  const audioDuration = useMemo((): number => {
+    const data = song.attributes?.audio?.data[audioIndex]
+
+    if (data) return data.attributes?.duration as number
+    else return 0
+  }, [song])
 
   const file = song.attributes?.audio?.data[audioIndex]
 
@@ -52,16 +55,10 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
 
   useEffect(() => {
     if (thisPlaying) {
-      console.log('new time:', currentTime)
-
       setInnerTime(currentTime)
       setInnerFormattedTime(formatTime(currentTime))
     }
   }, [currentTime])
-
-  useEffect(() => {
-    console.log('innertime:', innerTime)
-  }, [innerTime])
 
   useEffect(() => {
     console.log('Source:', source)

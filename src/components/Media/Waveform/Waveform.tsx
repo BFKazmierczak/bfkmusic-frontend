@@ -1,12 +1,17 @@
-import { Ref, useRef, useState } from 'react'
+import { Ref, useEffect, useRef, useState } from 'react'
 import MarkerButton from './MarkerButton/MarkerButton'
+import usePrevious from '@/src/hooks/usePrevious'
 
 interface WaveformProps {
   peaks: number[]
   selecting?: boolean
   selectionBegin?: number
   selectionEnd?: number
-  onScroll?: (left: number, visibleWidth: number) => void
+  totalTime: number
+  currentTime: number
+  highlight?: string
+  onTimeChange?: (newTime: number) => void
+  onScroll?: (left: number) => void
 }
 
 const Waveform = ({
@@ -14,13 +19,32 @@ const Waveform = ({
   selecting,
   selectionBegin,
   selectionEnd,
+  totalTime,
+  currentTime,
+  highlight,
+  onTimeChange,
   onScroll
 }: WaveformProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const [currentlySelecting, setCurrentlySelecting] = useState<
-    'start' | 'end' | undefined
-  >('start')
+  const progressRef = useRef<HTMLDivElement>(null)
+
+  const previousWidth = usePrevious(
+    Math.ceil(
+      (containerRef.current?.scrollWidth || 0) * (currentTime / totalTime)
+    )
+  )
+
+  useEffect(() => {
+    if (progressRef.current && containerRef.current) {
+      handleProgressScroll(
+        progressRef.current,
+        containerRef.current,
+        currentTime,
+        previousWidth
+      )
+    }
+  }, [currentTime])
 
   const [startBound, setStartBound] = useState<number>(50)
   const [endBound, setEndBound] = useState<number>(100)
@@ -28,9 +52,38 @@ const Waveform = ({
   const [movingLeft, setMovingLeft] = useState<boolean>(false)
   const [movingRight, setMovingRight] = useState<boolean>(false)
 
+  const [barWidth, setBarWidth] = useState<number>(0)
+
   function getPeakHeight(peak: number) {
     if (peak > 0.75) return peak * 90
     else return peak * 50
+  }
+
+  function handleProgressScroll(
+    progressDiv: HTMLDivElement,
+    containerDiv: HTMLDivElement,
+    currentTime: number,
+    prevWidth: number = 0
+  ) {
+    const progressWidth = progressDiv.offsetWidth
+
+    const timePercentage = currentTime / totalTime
+
+    if (containerDiv.offsetParent) {
+      const visibleWidth = containerDiv.offsetParent?.clientWidth
+
+      const newWidth = Math.ceil(containerDiv.scrollWidth * timePercentage)
+
+      const diff = newWidth - prevWidth
+
+      setBarWidth(newWidth)
+
+      if (progressWidth > visibleWidth - diff * 20) {
+        if (onScroll) {
+          onScroll(diff)
+        }
+      }
+    }
   }
 
   return (
@@ -65,8 +118,6 @@ const Waveform = ({
       //   }
       // }}
       onMouseMove={(event) => {
-        // console.log('MOUSE MOVING...')
-
         if (containerRef.current && (movingLeft || movingRight)) {
           const boundingRect = containerRef.current.getBoundingClientRect()
 
@@ -91,8 +142,6 @@ const Waveform = ({
 
             const leftThreshold = 80
             const rightThreshold = visibleWidth - 70
-
-            const triggerFreeX = rightThreshold - leftThreshold
 
             // get position relative to visibleWidth
 
@@ -148,6 +197,11 @@ const Waveform = ({
           </div>
         </div>
       )}
+
+      <div
+        ref={progressRef}
+        style={{ width: `${barWidth}px` }}
+        className=" h-2 bg-green-500 bg-opacity-80"></div>
 
       <div className=" flex items-center gap-x-[0.2px]">
         {peaks.map((peak, index) => (

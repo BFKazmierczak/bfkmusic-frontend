@@ -1,10 +1,7 @@
 import { getClient } from '@/lib/client'
-import AudioPlayer from '@/src/components/Media/AudioPlayer'
 import SongList from '@/src/components/Media/SongList'
 import { graphql } from '@/src/gql'
-import { SongEntity, SongEntityResponseCollection } from '@/src/gql/graphql'
-import { SongsResult } from '@/src/interfaces/SongsResult'
-import { ApolloQueryResult, gql } from '@apollo/client'
+import { SongEntity } from '@/src/gql/graphql'
 
 const GET_SONGS = graphql(`
   query GetSongs($pagination: PaginationArg) {
