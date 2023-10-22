@@ -1,4 +1,11 @@
-import { Ref, useEffect, useRef, useState } from 'react'
+import {
+  Ref,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import MarkerButton from './MarkerButton/MarkerButton'
 import usePrevious from '@/src/hooks/usePrevious'
 
@@ -26,14 +33,58 @@ const Waveform = ({
   onScroll
 }: WaveformProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
-
   const progressRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const progCanvasRef = useRef<HTMLCanvasElement>(null)
 
   const previousWidth = usePrevious(
     Math.ceil(
       (containerRef.current?.scrollWidth || 0) * (currentTime / totalTime)
     )
   )
+
+  useEffect(() => {
+    if (
+      peaks.length > 0 &&
+      canvasRef.current &&
+      progCanvasRef.current &&
+      containerRef.current
+    ) {
+      console.log('useEffect called')
+
+      const canvas = canvasRef.current
+      const progCanvas = progCanvasRef.current
+
+      const ctx = canvas.getContext('2d')
+      const progCtx = progCanvas.getContext('2d')
+
+      canvas.width = containerRef.current.scrollWidth
+      progCanvas.width = canvas.width
+
+      if (ctx && progCtx) {
+        // ctx.clearRect(0, 0, canvas.width, canvas.height) // Clear the canvas
+
+        ctx.fillStyle = '#fbcfe8'
+        progCtx.fillStyle = '#be185d'
+
+        const waveformHeight = 75
+
+        const totalWidth = containerRef.current.scrollWidth
+        const segmentCount = peaks.length
+        const segmentWidth = totalWidth / segmentCount
+
+        peaks.forEach((peak, index) => {
+          const xPos = index * segmentWidth
+          const segmentHeight = waveformHeight * peak
+
+          const offsetTop = (waveformHeight - segmentHeight) / 2
+
+          ctx.fillRect(xPos, offsetTop, segmentWidth * 1, segmentHeight)
+          progCtx.fillRect(xPos, offsetTop, segmentWidth * 1, segmentHeight)
+        })
+      }
+    }
+  }, [peaks, canvasRef, progCanvasRef, containerRef])
 
   useEffect(() => {
     if (progressRef.current && containerRef.current) {
@@ -78,7 +129,10 @@ const Waveform = ({
 
       setBarWidth(newWidth)
 
-      if (progressWidth > visibleWidth - diff * 20) {
+      if (
+        progressWidth > visibleWidth - diff * 20 &&
+        progressWidth < containerDiv.scrollWidth
+      ) {
         if (onScroll) {
           onScroll(diff)
         }
@@ -88,7 +142,7 @@ const Waveform = ({
 
   return (
     <div
-      className=" relative py-2 w-fit bg-neutral-700"
+      className=" relative py-2 w-fit bg-neutral-700 transition-all ease-in-out"
       ref={containerRef}
       // onClick={(event: React.MouseEvent<HTMLDivElement>) => {
       //   if (selecting) {
@@ -198,10 +252,24 @@ const Waveform = ({
         </div>
       )}
 
-      <div
+      {/* <div
         ref={progressRef}
         style={{ width: `${barWidth}px` }}
-        className=" h-2 bg-green-500 bg-opacity-80"></div>
+        className=" h-2 bg-green-500 bg-opacity-80"></div> */}
+
+      <div className=" relative">
+        <canvas
+          ref={progCanvasRef}
+          className=" absolute z-50"
+          style={{
+            clipPath: `inset(0% ${
+              100 - (currentTime === 0 ? 0 : (currentTime / totalTime) * 100)
+            }% 0% 0%)`,
+            overflow: 'hidden'
+          }}
+        />
+        <canvas ref={canvasRef} />
+      </div>
 
       <div className=" flex items-center gap-x-[0.2px]">
         {peaks.map((peak, index) => (
