@@ -50,7 +50,7 @@ const Waveform = ({
       progCanvasRef.current &&
       containerRef.current
     ) {
-      console.log('useEffect called')
+      const totalWidth = containerRef.current.scrollWidth * 5 // let it be wider!
 
       const canvas = canvasRef.current
       const progCanvas = progCanvasRef.current
@@ -58,18 +58,15 @@ const Waveform = ({
       const ctx = canvas.getContext('2d')
       const progCtx = progCanvas.getContext('2d')
 
-      canvas.width = containerRef.current.scrollWidth
-      progCanvas.width = canvas.width
+      canvas.width = totalWidth
+      progCanvas.width = totalWidth
 
       if (ctx && progCtx) {
-        // ctx.clearRect(0, 0, canvas.width, canvas.height) // Clear the canvas
-
         ctx.fillStyle = '#fbcfe8'
         progCtx.fillStyle = '#be185d'
 
         const waveformHeight = 75
 
-        const totalWidth = containerRef.current.scrollWidth
         const segmentCount = peaks.length
         const segmentWidth = totalWidth / segmentCount
 
@@ -87,13 +84,8 @@ const Waveform = ({
   }, [peaks, canvasRef, progCanvasRef, containerRef])
 
   useEffect(() => {
-    if (progressRef.current && containerRef.current) {
-      handleProgressScroll(
-        progressRef.current,
-        containerRef.current,
-        currentTime,
-        previousWidth
-      )
+    if (progCanvasRef.current && containerRef.current) {
+      handleProgressScroll(containerRef.current, currentTime, previousWidth)
     }
   }, [currentTime])
 
@@ -111,13 +103,10 @@ const Waveform = ({
   }
 
   function handleProgressScroll(
-    progressDiv: HTMLDivElement,
     containerDiv: HTMLDivElement,
     currentTime: number,
     prevWidth: number = 0
   ) {
-    const progressWidth = progressDiv.offsetWidth
-
     const timePercentage = currentTime / totalTime
 
     if (containerDiv.offsetParent) {
@@ -130,8 +119,8 @@ const Waveform = ({
       setBarWidth(newWidth)
 
       if (
-        progressWidth > visibleWidth - diff * 20 &&
-        progressWidth < containerDiv.scrollWidth
+        newWidth > visibleWidth - diff * 20 &&
+        newWidth < containerDiv.scrollWidth
       ) {
         if (onScroll) {
           onScroll(diff)
@@ -252,11 +241,6 @@ const Waveform = ({
         </div>
       )}
 
-      {/* <div
-        ref={progressRef}
-        style={{ width: `${barWidth}px` }}
-        className=" h-2 bg-green-500 bg-opacity-80"></div> */}
-
       <div className=" relative">
         <canvas
           ref={progCanvasRef}
@@ -269,17 +253,6 @@ const Waveform = ({
           }}
         />
         <canvas ref={canvasRef} />
-      </div>
-
-      <div className=" flex items-center gap-x-[0.2px]">
-        {peaks.map((peak, index) => (
-          <div
-            className=" w-[1px] bg-pink-200"
-            style={{
-              height: `${getPeakHeight(peak)}px`
-            }}
-          />
-        ))}
       </div>
     </div>
   )
