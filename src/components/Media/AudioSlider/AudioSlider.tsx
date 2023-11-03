@@ -72,14 +72,14 @@ const AudioSlider = ({
       const relativeX = clientX - divX
       const relativeY = divY - clientY
 
-      const percentage = (relativeX / div.width) * 100
+      const percentage = relativeX / div.width
 
       console.log('relativeX:', relativeX)
       console.log('div width:', div.width)
 
       console.log('percentage:', percentage)
 
-      const newTime = (percentage / 100) * totalTime
+      const newTime = percentage * totalTime
 
       console.log('new time:', newTime)
       if (onTimeChange) onTimeChange(newTime)

@@ -163,13 +163,14 @@ const SongPlayerAction = ({
 
             {peaks && (
               <div
-                className=" relative z-[50] py-5 sm:w-[32rem] md:w-[48rem] lg:w-[64rem]  overflow-x-auto"
+                className=" relative w-full sm:w-[600px] lg:w-[800px]"
                 ref={waveformContainerRef}>
                 <Waveform
                   totalTime={duration}
                   currentTime={currentTime}
                   peaks={peaks}
                   selecting={rangeSelection}
+                  onTimeChange={changeTime}
                   onScroll={(left) => {
                     if (waveformContainerRef.current) {
                       waveformContainerRef.current.scrollBy({

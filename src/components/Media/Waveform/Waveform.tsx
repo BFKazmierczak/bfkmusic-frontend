@@ -19,6 +19,7 @@ interface WaveformProps {
   highlight?: string
   onTimeChange?: (newTime: number) => void
   onScroll?: (left: number) => void
+  onSlide?: () => void
 }
 
 const Waveform = ({
@@ -30,12 +31,16 @@ const Waveform = ({
   currentTime,
   highlight,
   onTimeChange,
-  onScroll
+  onScroll,
+  onSlide
 }: WaveformProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const progCanvasRef = useRef<HTMLCanvasElement>(null)
+
+  const [visibleRange, setVisibleRange] = useState<[number, number]>([0, 0])
+  const [changedManually, setChangedManually] = useState<boolean>(false)
 
   const previousWidth = usePrevious(
     Math.ceil(
@@ -80,14 +85,46 @@ const Waveform = ({
           progCtx.fillRect(xPos, offsetTop, segmentWidth * 1, segmentHeight)
         })
       }
+
+      const scrollLeft = containerRef.current.scrollLeft
+
+      if (containerRef.current.offsetParent) {
+        const visibleWidth = containerRef.current.offsetParent?.clientWidth
+
+        const right = scrollLeft + visibleWidth
+
+        console.log('setting visible range to:', scrollLeft, right)
+
+        setVisibleRange([scrollLeft, right])
+      }
     }
   }, [peaks, canvasRef, progCanvasRef, containerRef])
 
   useEffect(() => {
-    if (progCanvasRef.current && containerRef.current) {
-      handleProgressScroll(containerRef.current, currentTime, previousWidth)
+    if (
+      progCanvasRef.current &&
+      containerRef.current &&
+      !(visibleRange[0] === 0 && visibleRange[1] === 0)
+    ) {
+      if (!changedManually) {
+        handleProgressChange(containerRef.current, currentTime, previousWidth)
+      } else
+        handleProgressChange(
+          containerRef.current,
+          currentTime,
+          previousWidth,
+          true
+        )
     }
   }, [currentTime])
+
+  // useEffect(() => {
+  //   // console.log(...visibleRange)
+  // }, [visibleRange])
+
+  useEffect(() => {
+    console.log({ changedManually })
+  }, [changedManually])
 
   const [startBound, setStartBound] = useState<number>(50)
   const [endBound, setEndBound] = useState<number>(100)
@@ -102,69 +139,122 @@ const Waveform = ({
     else return peak * 50
   }
 
-  function handleProgressScroll(
+  function handleProgressChange(
     containerDiv: HTMLDivElement,
     currentTime: number,
-    prevWidth: number = 0
+    prevWidth: number = 0,
+    shouldCenter: boolean = false
   ) {
     const timePercentage = currentTime / totalTime
 
     if (containerDiv.offsetParent) {
-      const visibleWidth = containerDiv.offsetParent?.clientWidth
-
       const newWidth = Math.ceil(containerDiv.scrollWidth * timePercentage)
-
       const diff = newWidth - prevWidth
 
       setBarWidth(newWidth)
 
-      if (
-        newWidth > visibleWidth - diff * 20 &&
-        newWidth < containerDiv.scrollWidth
-      ) {
-        if (onScroll) {
-          onScroll(diff)
-        }
+      // console.log({ diff, offsetLeft, addLeftCond, visibleRange })
+
+      // if (shouldCenter) {
+      //   // do some shit
+      //   console.log('centering')
+
+      //   const visibleWidth = containerDiv.offsetParent?.clientWidth
+      //   const scrollMax = containerDiv.scrollWidth - visibleWidth
+
+      //   const visibleMid = (visibleRange[0] + visibleRange[1]) / 2
+
+      //   const scrollValue = scrollMax * timePercentage
+
+      //   console.log({ scrollMax, scrollValue })
+
+      //   setChangedManually(false)
+
+      //   containerDiv.scrollLeft = visibleRange[0]
+
+      //   // console.log('Centering3 a div...', { scrollValue })
+      // }
+
+      const scrollLeft = containerDiv.scrollLeft
+
+      const visible = containerDiv.offsetParent?.clientWidth
+
+      const leftEdge = newWidth - scrollLeft
+      const rightEdge = scrollLeft + visible
+
+      const scrollTreshold = rightEdge - diff
+
+      console.log({ newWidth, scrollTreshold, diff })
+
+      if (newWidth >= scrollTreshold - scrollTreshold * 0.15 && !shouldCenter) {
+        console.log('scrolling')
+
+        containerDiv.scrollBy({ left: diff, behavior: 'instant' })
+      } else if (shouldCenter) {
+        // do some shit
+        console.log('centering')
+
+        const visibleProgressWidth = newWidth // what next?
+        console.log(containerDiv.getBoundingClientRect())
+        console.log({ visibleProgressWidth, newWidth })
+
+        const scrollMax = containerDiv.scrollWidth - visible
+
+        const scrollValue =
+          containerDiv.scrollWidth * timePercentage - visible / 2
+
+        console.log({ leftEdge, scrollMax, scrollValue })
+
+        setChangedManually(false)
+
+        containerDiv.scrollLeft = scrollValue
+
+        // console.log('Centering3 a div...', { scrollValue })
       }
+
+      setVisibleRange([leftEdge, rightEdge])
+    }
+  }
+
+  function handleHorizontalScroll(event: React.UIEvent<HTMLDivElement>) {
+    const scrollLeft = event.currentTarget.scrollLeft
+
+    if (containerRef.current?.offsetParent) {
+      const visibleWidth = containerRef.current.offsetParent?.clientWidth
+
+      const right = scrollLeft + visibleWidth
+
+      setVisibleRange([scrollLeft, right])
     }
   }
 
   return (
     <div
-      className=" relative py-2 w-fit bg-neutral-700 transition-all ease-in-out"
+      className=" relative overflow-x-auto py-2 bg-neutral-700 transition-all ease-in-out"
       ref={containerRef}
-      // onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-      //   if (selecting) {
-      //     const boundingRect = event.currentTarget.getBoundingClientRect()
+      // onScroll={handleHorizontalScroll}
+      onClick={(event) => {
+        if (containerRef.current) {
+          const left = event.currentTarget.getBoundingClientRect().left
 
-      //     if (currentlySelecting === 'start') {
-      //       const leftBound = event.clientX - boundingRect.left
+          const clickedX =
+            containerRef.current.scrollLeft + (event.clientX - left)
 
-      //       console.log('Bound:', leftBound)
+          const percentage = clickedX / containerRef.current.scrollWidth
 
-      //       setStartBound(leftBound)
+          // console.log({ clickedX })
 
-      //       setCurrentlySelecting('end')
-      //       // event.currentTarget.
-      //     } else {
-      //       const rightBound = event.clientX - boundingRect.left
+          setChangedManually(true)
 
-      //       if (rightBound < startBound) {
-      //         setStartBound(rightBound)
-      //         setEndBound(startBound)
-      //       } else {
-      //         setEndBound(rightBound)
-      //       }
+          const newTime = totalTime * percentage
+          console.log({ newTime })
 
-      //       setCurrentlySelecting('start')
-      //     }
-      //   }
-      // }}
+          if (onTimeChange) onTimeChange(newTime)
+        }
+      }}
       onMouseMove={(event) => {
         if (containerRef.current && (movingLeft || movingRight)) {
           const boundingRect = containerRef.current.getBoundingClientRect()
-
-          // console.log('current:', containerRef.current)
 
           const bound = event.clientX - boundingRect.left
 
@@ -188,16 +278,10 @@ const Waveform = ({
 
             // get position relative to visibleWidth
 
-            // console.log('visible: ', visibleWidth)
-            // console.log('trigger free zone:', triggerFreeX)
-            // console.log('scroll width', offsetParent.scrollWidth)
-
             if (relativeBound > rightThreshold) {
-              console.log('inisde right threshold')
-              if (onScroll) onScroll(30, visibleWidth)
+              if (onScroll) onScroll(30)
             } else if (relativeBound < leftThreshold) {
-              console.log('inisde left threshold')
-              if (onScroll) onScroll(-30, visibleWidth)
+              if (onScroll) onScroll(-30)
             }
           }
 
@@ -219,8 +303,6 @@ const Waveform = ({
           <div className=" absolute flex justify-center items-center h-24 w-1 bg-pink-800">
             <MarkerButton
               onMouseDown={(event) => {
-                console.log('mouse down')
-
                 setMovingLeft(true)
               }}
             />
