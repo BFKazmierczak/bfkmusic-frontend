@@ -131,6 +131,8 @@ const Waveform = ({
   const [movingLeft, setMovingLeft] = useState<boolean>(false)
   const [movingRight, setMovingRight] = useState<boolean>(false)
 
+  const [sliding, setSliding] = useState<boolean>(false)
+
   function handleProgressChange(
     containerDiv: HTMLDivElement,
     currentTime: number,
@@ -179,55 +181,72 @@ const Waveform = ({
     if (onTimeChange) onTimeChange(newTime)
   }
 
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (containerRef.current) {
+      if (movingLeft || movingRight) {
+        const boundingRect = containerRef.current.getBoundingClientRect()
+        const bound =
+          event.clientX + event.currentTarget.scrollLeft - boundingRect.left
+
+        console.log({ bound })
+
+        const offsetParent = containerRef.current.offsetParent
+
+        if (offsetParent) {
+          const relativeBoundingRect = offsetParent.getBoundingClientRect()
+          const relativeBound = event.clientX - relativeBoundingRect.left
+
+          console.log({ relativeBound })
+
+          const visibleWidth = offsetParent.clientWidth
+
+          const leftThreshold = 80
+          const rightThreshold = visibleWidth - 70
+
+          // get position relative to visibleWidth
+
+          // if (relativeBound > rightThreshold) {
+          //   if (onScroll) onScroll(30)
+          // } else if (relativeBound < leftThreshold) {
+          //   if (onScroll) onScroll(-30)
+          // }
+        }
+
+        if (movingLeft) setStartBound(bound)
+        else if (movingRight) setEndBound(bound)
+      } else if (sliding) {
+        handleWaveformClick(event)
+      }
+    }
+  }
+
   return (
     <div
-      className=" relative overflow-x-auto py-2 bg-neutral-700 transition-all ease-in-out"
+      className={` relative z-[60] ${
+        movingLeft || movingRight ? ' overflow-x-hidden' : ' overflow-x-auto'
+      } py-2 bg-green-700 transition-all ease-in-out`}
       ref={containerRef}
-      onClick={handleWaveformClick}
-      onMouseMove={(event) => {
-        if (containerRef.current && (movingLeft || movingRight)) {
-          const boundingRect = containerRef.current.getBoundingClientRect()
-
-          const bound = event.clientX - boundingRect.left
-
-          console.log('bound:', bound)
-
-          const offsetParent = containerRef.current.offsetParent
-
-          if (offsetParent) {
-            const relativeBoundingRect = offsetParent.getBoundingClientRect()
-
-            // console.log(relativeBoundingRect)
-
-            const relativeBound = event.clientX - relativeBoundingRect.left
-
-            console.log('relative bound:', relativeBound)
-
-            const visibleWidth = offsetParent.clientWidth
-
-            const leftThreshold = 80
-            const rightThreshold = visibleWidth - 70
-
-            // get position relative to visibleWidth
-
-            if (relativeBound > rightThreshold) {
-              if (onScroll) onScroll(30)
-            } else if (relativeBound < leftThreshold) {
-              if (onScroll) onScroll(-30)
-            }
-          }
-
-          if (movingLeft) setStartBound(bound)
-          else if (movingRight) setEndBound(bound)
+      onClick={(event) => {
+        if (!selecting) handleWaveformClick(event)
+      }}
+      onPointerDown={() => {
+        if (!selecting) setSliding(true)
+      }}
+      onPointerUp={(event) => {
+        if (sliding) setSliding(false)
+        else if (selecting) {
+          if (movingLeft) setMovingLeft(false)
+          else if (movingRight) setMovingRight(false)
         }
       }}
-      onMouseUp={(event) => {
-        if (movingLeft) setMovingLeft(false)
-        else if (movingRight) setMovingRight(false)
+      onPointerMove={(event) => {
+        console.log('moving')
+
+        handleMouseMove(event)
       }}>
       {selecting && startBound > 0 && (
         <div
-          className=" absolute h-24 w-full bg-pink-500 bg-opacity-50"
+          className=" absolute z-[60] h-24 w-full bg-pink-500 bg-opacity-50"
           style={{
             left: `${startBound}px`,
             width: `${endBound - startBound}px`
