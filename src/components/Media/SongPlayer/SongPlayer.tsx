@@ -13,10 +13,16 @@ import formatTime from '@/src/utils/formatTime'
 export interface SongPlayerProps {
   song: SongEntity
   audioIndex?: number
+  size?: 'small' | 'normal'
   children?: ReactNode
 }
 
-const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
+const SongPlayer = ({
+  song,
+  audioIndex = 0,
+  size = 'normal',
+  children
+}: SongPlayerProps) => {
   const {
     songData,
     pause,
@@ -77,8 +83,11 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
   }, [source])
 
   return (
-    <div className=" flex flex-row bg-neutral-300 w-80 sm:w-96 z-[7 0]">
-      <div className=" h-full aspect-square bg-neutral-700">
+    <div className=" flex flex-row bg-neutral-300 w-full sm:w-96 z-[7 0] ">
+      <div
+        className={` h-full ${
+          size === 'normal' && 'aspect-square'
+        } bg-neutral-700`}>
         <div className=" flex justify-center items-center w-full h-full text-white bg-pink-600">
           {localPlaying ? (
             <div
@@ -100,14 +109,23 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
         </div>
       </div>
 
-      <div className=" flex justify-center w-full">
-        <div className=" flex flex-col w-full gap-y-2 p-3">
-          <span>{song.attributes?.audio?.data[audioIndex].id}</span>
-
-          <span>
+      <div
+        className={` flex flex-col gap-y-2 w-fit p-3 overflow-x-hidden ${
+          size === 'small' && 'items-center'
+        } `}>
+        <div>
+          <span
+            className=" flex w-fit bg-purple-500"
+            style={{
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              overflow: 'auto'
+            }}>
             {song.attributes?.audio?.data[audioIndex].attributes?.name}
           </span>
+        </div>
 
+        <>
           <AudioSlider
             totalTime={audioDuration}
             currentTime={innerTime}
@@ -119,14 +137,17 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
               changeTime(newTime)
             }}
           />
+        </>
 
+        {size !== 'small' && (
           <div>
             <span>{innerFormattedTime} /</span>
             <span>{formatTime(audioDuration)}</span>
           </div>
+        )}
 
-          {children}
-          {/* {session.data && mode === 'overview' && (
+        {children}
+        {/* {session.data && mode === 'overview' && (
             <div>
               <button
                 className=" small-button w-full"
@@ -135,7 +156,6 @@ const SongPlayer = ({ song, audioIndex = 0, children }: SongPlayerProps) => {
               </button>
             </div>
           )} */}
-        </div>
       </div>
     </div>
   )
