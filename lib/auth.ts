@@ -79,8 +79,12 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (response) {
-          const user = response.data.login
-          return user
+          const data = response.data.login
+
+          const jwt = data.jwt
+          const destructuredUser = { ...data.user }
+
+          return { jwt, ...destructuredUser }
         }
 
         return null
