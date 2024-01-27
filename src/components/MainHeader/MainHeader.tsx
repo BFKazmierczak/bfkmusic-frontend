@@ -18,10 +18,8 @@ const MainHeader = async () => {
 
   if (session) navBarItems.push({ name: 'Moja biblioteka', href: '/library' })
 
-  console.log('Session:', session)
-
   return (
-    <div className=" p-5 flex flex-row justify-between items-center bg-neutral-100">
+    <div className=" sticky top-0 w-full p-5 flex flex-row justify-between items-center bg-neutral-100">
       <HamburgerMenu />
 
       <div className=" hidden sm:flex flex-row gap-x-5 items-end leading-none">
@@ -43,10 +41,10 @@ const MainHeader = async () => {
                 <br />
               </div>
             )}
-            <b>{session ? session.user.user.username : 'Niezalogowany'}</b>
+            <b>{session ? session.user?.username : 'Niezalogowany'}</b>
           </div>
 
-          <UserAvatar />
+          <UserAvatar loggedIn={session !== null} />
         </div>
       </div>
     </div>

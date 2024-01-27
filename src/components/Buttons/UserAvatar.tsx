@@ -4,7 +4,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { useState } from 'react'
 import PopupMenu from '../Menus/PopupMenu/PopupMenu'
 
-const UserAvatar = () => {
+interface UserAvatarProps {
+  loggedIn: boolean
+}
+
+const UserAvatar = ({ loggedIn }: UserAvatarProps) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
   return (
@@ -15,7 +19,12 @@ const UserAvatar = () => {
         onClick={() => setMenuOpen((prev) => !prev)}
       />
 
-      <PopupMenu open={menuOpen} setOpen={setMenuOpen} right />
+      <PopupMenu
+        open={menuOpen}
+        setOpen={setMenuOpen}
+        loggedIn={loggedIn}
+        right
+      />
 
       {/* <div
         className={` absolute ${

@@ -13,12 +13,6 @@ interface MainNavbarProps {
 const MainNavbar = ({ items }: MainNavbarProps) => {
   const pathname = usePathname()
 
-  const session = useSession()
-
-  useEffect(() => {
-    console.log('session:', session)
-  }, [session])
-
   return (
     <div className=" flex flex-row items-end text-left gap-x-4">
       {items?.map((item) => {

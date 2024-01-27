@@ -2,11 +2,12 @@
 
 import { LegacyRef, MutableRefObject, useEffect, useRef, useState } from 'react'
 import PopupMenuItem from './PopupMenuItem'
-import { signOut } from 'next-auth/react'
+import { signIn, signOut } from 'next-auth/react'
 
 type PopupMenuInterface = {
   open: boolean
   setOpen: (state: boolean) => void
+  loggedIn?: boolean
 } & (
   | {
       left: boolean
@@ -37,7 +38,13 @@ const useOutsideAlerter = (
   }, [ref, callback])
 }
 
-const PopupMenu = ({ open, setOpen, left, right }: PopupMenuInterface) => {
+const PopupMenu = ({
+  open,
+  setOpen,
+  loggedIn = false,
+  left,
+  right
+}: PopupMenuInterface) => {
   const menuRef = useRef(null)
   useOutsideAlerter(menuRef, () => setOpen(false))
 
@@ -52,13 +59,21 @@ const PopupMenu = ({ open, setOpen, left, right }: PopupMenuInterface) => {
       ref={menuRef}
       //   onBlur={() => setOpen(false)}
     >
-      <div className=" flex flex-col gap-y-3 p-5">
-        <PopupMenuItem text="Mój profil" href="/account" />
+      {loggedIn && (
+        <div className=" flex flex-col gap-y-3 p-5">
+          <PopupMenuItem text="Mój profil" href="/account" />
 
-        <PopupMenuItem text="Ustawienia" href="/settings" />
+          <PopupMenuItem text="Ustawienia" href="/settings" />
 
-        <PopupMenuItem text="Wyloguj się" onClick={() => signOut()} />
-      </div>
+          <PopupMenuItem text="Wyloguj się" onClick={() => signOut()} />
+        </div>
+      )}
+
+      {!loggedIn && (
+        <div className=" flex flex-col gap-y-3 p-5">
+          <PopupMenuItem text="Zaloguj się" onClick={() => signIn()} />
+        </div>
+      )}
     </div>
   )
 }
