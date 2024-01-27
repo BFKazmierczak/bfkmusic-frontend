@@ -8,18 +8,22 @@ import {
 } from 'react'
 import MarkerButton from './MarkerButton/MarkerButton'
 import usePrevious from '@/src/hooks/usePrevious'
+import { CommentRange } from '../SongPlayerAction/SongPlayerAction'
 
 interface WaveformProps {
   peaks: number[]
   selecting?: boolean
   selectionBegin?: number
   selectionEnd?: number
+  playing?: boolean
   totalTime: number
   currentTime: number
   highlight?: string
+  rangeSelected?: boolean
   onTimeChange?: (newTime: number) => void
   onScroll?: (left: number) => void
   onSlide?: () => void
+  onRangeUpdate?: (newRange: CommentRange) => void
 }
 
 const Waveform = ({
@@ -27,12 +31,15 @@ const Waveform = ({
   selecting,
   selectionBegin,
   selectionEnd,
+  playing = false,
   totalTime,
   currentTime,
   highlight,
+  rangeSelected = false,
   onTimeChange,
   onScroll,
-  onSlide
+  onSlide,
+  onRangeUpdate
 }: WaveformProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -40,6 +47,14 @@ const Waveform = ({
 
   const [visibleRange, setVisibleRange] = useState<[number, number]>([0, 0])
   const [changedManually, setChangedManually] = useState<boolean>(false)
+
+  const [startBound, setStartBound] = useState<number>(10)
+  const [endBound, setEndBound] = useState<number>(50)
+
+  const [movingLeft, setMovingLeft] = useState<boolean>(false)
+  const [movingRight, setMovingRight] = useState<boolean>(false)
+
+  const [sliding, setSliding] = useState<boolean>(false)
 
   const previousWidth = usePrevious(
     Math.ceil(
@@ -114,6 +129,17 @@ const Waveform = ({
           previousWidth,
           true
         )
+
+      if (!selecting && !rangeSelected) {
+        const oneSecondPercentage = 1 / totalTime
+        const percentage = currentTime / totalTime
+        const width = containerRef.current.scrollWidth
+
+        const newValue = percentage * width
+
+        setStartBound(newValue)
+        setEndBound(newValue + 5 * oneSecondPercentage * width)
+      }
     }
   }, [currentTime])
 
@@ -125,13 +151,16 @@ const Waveform = ({
     console.log({ changedManually })
   }, [changedManually])
 
-  const [startBound, setStartBound] = useState<number>(50)
-  const [endBound, setEndBound] = useState<number>(100)
+  useEffect(() => {
+    if (onRangeUpdate && containerRef.current) {
+      const width = containerRef.current.scrollWidth
 
-  const [movingLeft, setMovingLeft] = useState<boolean>(false)
-  const [movingRight, setMovingRight] = useState<boolean>(false)
+      const startTime = (startBound / width) * totalTime
+      const endTime = (endBound / width) * totalTime
 
-  const [sliding, setSliding] = useState<boolean>(false)
+      onRangeUpdate({ start: startTime, end: endTime })
+    }
+  }, [containerRef.current, startBound, endBound])
 
   function handleProgressChange(
     containerDiv: HTMLDivElement,
@@ -154,9 +183,13 @@ const Waveform = ({
 
       const scrollTreshold = rightEdge - diff
 
-      if (newWidth >= scrollTreshold - scrollTreshold * 0.15 && !shouldCenter) {
+      if (
+        newWidth >= scrollTreshold - scrollTreshold * 0.15 &&
+        !shouldCenter &&
+        !selecting
+      ) {
         containerDiv.scrollBy({ left: diff, behavior: 'instant' })
-      } else if (shouldCenter) {
+      } else if (shouldCenter && !selecting) {
         const scrollValue =
           containerDiv.scrollWidth * timePercentage - visible / 2
 
