@@ -15,7 +15,7 @@ const SongViewDetailed = ({ song }: SongHistoryProps) => {
 
       <span>Starsze wersje tego utworu:</span>
 
-      <div className=" flex flex-col gap-y-3">
+      <div className=" flex flex-col gap-y-3 w-full">
         {song.attributes?.audio?.data.map((audio, index) => {
           if (index > 0)
             return <SongPlayerAction song={song} audioIndex={index} />

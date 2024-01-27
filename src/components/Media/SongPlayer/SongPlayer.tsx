@@ -14,6 +14,7 @@ export interface SongPlayerProps {
   song: SongEntity
   audioIndex?: number
   size?: 'small' | 'normal'
+  showMainName?: boolean
   children?: ReactNode
 }
 
@@ -21,6 +22,7 @@ const SongPlayer = ({
   song,
   audioIndex = 0,
   size = 'normal',
+  showMainName = false,
   children
 }: SongPlayerProps) => {
   const {
@@ -47,10 +49,6 @@ const SongPlayer = ({
   }, [song])
 
   const file = song.attributes?.audio?.data[audioIndex]
-
-  useEffect(() => {
-    console.log('HIGHLIGHT:', highlight)
-  }, [highlight])
 
   useEffect(() => {
     if (thisPlaying) {
@@ -83,9 +81,9 @@ const SongPlayer = ({
   }, [source])
 
   return (
-    <div className=" flex flex-row bg-neutral-300 w-full sm:w-96 z-[7 0] ">
+    <div className=" flex flex-row bg-neutral-300 w-64 sm:w-96 z-[7 0] ">
       <div
-        className={` h-full ${
+        className={` h-full aspect-square ${
           size === 'normal' && 'aspect-square'
         } bg-neutral-700`}>
         <div className=" flex justify-center items-center w-full h-full text-white bg-pink-600">
@@ -110,8 +108,8 @@ const SongPlayer = ({
       </div>
 
       <div
-        className={` flex flex-col gap-y-2 w-fit p-3 overflow-x-hidden ${
-          size === 'small' && 'items-center'
+        className={` flex w-full flex-col gap-y-2 p-3 overflow-x-hidden ${
+          size === 'small' && 'items-start'
         } `}>
         <div>
           <span
@@ -121,41 +119,34 @@ const SongPlayer = ({
               display: 'flex',
               overflow: 'auto'
             }}>
-            {song.attributes?.audio?.data[audioIndex].attributes?.name}
+            {showMainName
+              ? song.attributes?.name
+              : song.attributes?.audio?.data[audioIndex].attributes?.name}
           </span>
         </div>
 
-        <>
-          <AudioSlider
-            totalTime={audioDuration}
-            currentTime={innerTime}
-            highlight={
-              highlight[1] === Number(file?.id) ? highlight[0] : undefined
-            }
-            onTimeChange={(newTime) => {
-              console.log('time change!')
-              changeTime(newTime)
-            }}
-          />
-        </>
-
         {size !== 'small' && (
-          <div>
-            <span>{innerFormattedTime} /</span>
-            <span>{formatTime(audioDuration)}</span>
-          </div>
+          <>
+            <AudioSlider
+              totalTime={audioDuration}
+              currentTime={innerTime}
+              highlight={
+                highlight[1] === Number(file?.id) ? highlight[0] : undefined
+              }
+              onTimeChange={(newTime) => {
+                console.log('time change!')
+                changeTime(newTime)
+              }}
+            />
+
+            <div>
+              <span>{innerFormattedTime} /</span>
+              <span>{formatTime(audioDuration)}</span>
+            </div>
+          </>
         )}
 
         {children}
-        {/* {session.data && mode === 'overview' && (
-            <div>
-              <button
-                className=" small-button w-full"
-                onClick={() => router.push(`/song/${song.id}`)}>
-                Pokaż szczegóły
-              </button>
-            </div>
-          )} */}
       </div>
     </div>
   )
