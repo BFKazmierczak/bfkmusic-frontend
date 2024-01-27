@@ -17,6 +17,7 @@ import { CommentEntity, UploadFileEntity } from '@/src/gql/graphql'
 import { graphql } from '@/src/gql'
 import Waveform from '../Waveform/Waveform'
 import useGlobalPlayerStore from '@/src/stores/globalPlayerStore'
+import formatTime from '@/src/utils/formatTime'
 
 const CREATE_SONG_COMMENT = graphql(`
   mutation CreateComment(
@@ -52,6 +53,11 @@ const CREATE_SONG_COMMENT = graphql(`
     }
   }
 `)
+
+export interface CommentRange {
+  start: number
+  end: number
+}
 
 interface SongPlayerActionProps extends SongPlayerProps {}
 
@@ -90,6 +96,12 @@ const SongPlayerAction = ({
   const [scrollPosition, setScrolLPosition] = useState<number>(0)
 
   const [rangeSelection, setRangeSelection] = useState<boolean>(false)
+
+  const [commentRange, setCommentRange] = useState<CommentRange>({
+    start: 0,
+    end: 0
+  })
+  const [rangeSelected, setRangeSelected] = useState<boolean>(false)
 
   const peaks =
     props.song.attributes?.audio?.data[audioIndex].attributes?.waveform?.data
@@ -158,9 +170,7 @@ const SongPlayerAction = ({
           <div
             className={` absolute inset-5 p-5 bg-white border-2 border-gray-500 shadow-xl ${
               modalOpen ? 'bg-opacity-100' : 'bg-opacity-0'
-            } transition-all ease-in-out`}>
-            <SongPlayer {...props} />
-
+            } overflow-y-auto transition-all ease-in-out`}>
             {peaks && (
               <div
                 className=" relative w-full sm:w-[600px] lg:w-[800px]"
@@ -170,6 +180,7 @@ const SongPlayerAction = ({
                   currentTime={currentTime}
                   peaks={peaks}
                   selecting={rangeSelection}
+                  rangeSelected={rangeSelected}
                   onTimeChange={changeTime}
                   onScroll={(left) => {
                     if (waveformContainerRef.current) {
@@ -179,36 +190,49 @@ const SongPlayerAction = ({
                       })
                     }
                   }}
+                  onRangeUpdate={(newRange) => {
+                    setCommentRange(newRange)
+                  }}
                 />
               </div>
             )}
 
+            <SongPlayer {...props} size="small" />
             <div className=" flex flex-col gap-y-5 mt-5">
               <div className=" flex flex-col gap-y-2">
                 <textarea
                   className=" basic-input w-full resize-none"
-                  rows={3}
+                  rows={2}
                   placeholder="Napisz komentarz..."
                   value={commentValue}
                   onChange={(event) => setCommentValue(event.target.value)}
                 />
 
-                <div className=" flex gap-x-1">
-                  <span className=" flex">Od: 00:00</span>
-
-                  <span className=" flex">Do: 00:00</span>
-
+                <div className=" flex flex-col gap-y-1">
                   <span
                     className=" flex justify-center items-center z-[40] px-1 gap-x-1 text-white bg-pink-500 cursor-pointer"
-                    onClick={() => setRangeSelection((prev) => !prev)}>
+                    onClick={() => {
+                      setRangeSelection((prev) => !prev)
+                      setRangeSelected(true)
+                    }}>
                     {rangeSelection ? (
-                      'Anuluj'
+                      'Zatwierdź zakres'
                     ) : (
                       <>
-                        <SettingsEthernetIcon /> Wyznacz zakres
+                        <SettingsEthernetIcon /> Zakres komentarza
                       </>
                     )}
                   </span>
+
+                  <div className=" flex gap-x-1 justify-between z-[40] bg-white">
+                    <span className=" flex z-[40]">
+                      Od: {formatTime(commentRange.start)}
+                    </span>
+
+                    <span className=" flex z-[40]">
+                      Do: {formatTime(commentRange.end)}
+                    </span>
+                  </div>
                 </div>
 
                 <button
@@ -224,7 +248,7 @@ const SongPlayerAction = ({
 
                 <div className=" flex justify-center">
                   <div
-                    className=" relative flex flex-col sm:items-center gap-y-5 w-full sm:w-fit h-[37vh] overflow-auto"
+                    className=" relative flex flex-col sm:items-center gap-y-5 w-full sm:w-fit h-[50vh] overflow-y-auto"
                     ref={commentContainerRef}
                     onScroll={(event) =>
                       setScrolLPosition(event.target.scrollTop)
@@ -251,7 +275,7 @@ const SongPlayerAction = ({
                         return (
                           <CommentBox
                             data={comment}
-                            userId={session.data?.user.user.id}
+                            userId={session.data?.user?.id}
                             selected={comment.id === selectedComment}
                             onSelect={(id, timeRange) => {
                               setSelectedComment(id)
