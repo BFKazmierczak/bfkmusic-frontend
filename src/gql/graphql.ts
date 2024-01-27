@@ -36,6 +36,7 @@ export type BooleanFilterInput = {
   lt?: InputMaybe<Scalars['Boolean']['input']>;
   lte?: InputMaybe<Scalars['Boolean']['input']>;
   ne?: InputMaybe<Scalars['Boolean']['input']>;
+  nei?: InputMaybe<Scalars['Boolean']['input']>;
   not?: InputMaybe<BooleanFilterInput>;
   notContains?: InputMaybe<Scalars['Boolean']['input']>;
   notContainsi?: InputMaybe<Scalars['Boolean']['input']>;
@@ -104,6 +105,107 @@ export type CommentRelationResponseCollection = {
   data: Array<CommentEntity>;
 };
 
+export type ContentReleasesRelease = {
+  __typename?: 'ContentReleasesRelease';
+  actions?: Maybe<ContentReleasesReleaseActionRelationResponseCollection>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  name: Scalars['String']['output'];
+  releasedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type ContentReleasesReleaseActionsArgs = {
+  filters?: InputMaybe<ContentReleasesReleaseActionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type ContentReleasesReleaseAction = {
+  __typename?: 'ContentReleasesReleaseAction';
+  contentType: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  entry?: Maybe<GenericMorph>;
+  release?: Maybe<ContentReleasesReleaseEntityResponse>;
+  type: Enum_Contentreleasesreleaseaction_Type;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type ContentReleasesReleaseActionEntity = {
+  __typename?: 'ContentReleasesReleaseActionEntity';
+  attributes?: Maybe<ContentReleasesReleaseAction>;
+  id?: Maybe<Scalars['ID']['output']>;
+};
+
+export type ContentReleasesReleaseActionEntityResponse = {
+  __typename?: 'ContentReleasesReleaseActionEntityResponse';
+  data?: Maybe<ContentReleasesReleaseActionEntity>;
+};
+
+export type ContentReleasesReleaseActionEntityResponseCollection = {
+  __typename?: 'ContentReleasesReleaseActionEntityResponseCollection';
+  data: Array<ContentReleasesReleaseActionEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ContentReleasesReleaseActionFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<ContentReleasesReleaseActionFiltersInput>>>;
+  contentType?: InputMaybe<StringFilterInput>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<ContentReleasesReleaseActionFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ContentReleasesReleaseActionFiltersInput>>>;
+  release?: InputMaybe<ContentReleasesReleaseFiltersInput>;
+  type?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ContentReleasesReleaseActionInput = {
+  contentType?: InputMaybe<Scalars['String']['input']>;
+  release?: InputMaybe<Scalars['ID']['input']>;
+  type?: InputMaybe<Enum_Contentreleasesreleaseaction_Type>;
+};
+
+export type ContentReleasesReleaseActionRelationResponseCollection = {
+  __typename?: 'ContentReleasesReleaseActionRelationResponseCollection';
+  data: Array<ContentReleasesReleaseActionEntity>;
+};
+
+export type ContentReleasesReleaseEntity = {
+  __typename?: 'ContentReleasesReleaseEntity';
+  attributes?: Maybe<ContentReleasesRelease>;
+  id?: Maybe<Scalars['ID']['output']>;
+};
+
+export type ContentReleasesReleaseEntityResponse = {
+  __typename?: 'ContentReleasesReleaseEntityResponse';
+  data?: Maybe<ContentReleasesReleaseEntity>;
+};
+
+export type ContentReleasesReleaseEntityResponseCollection = {
+  __typename?: 'ContentReleasesReleaseEntityResponseCollection';
+  data: Array<ContentReleasesReleaseEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type ContentReleasesReleaseFiltersInput = {
+  actions?: InputMaybe<ContentReleasesReleaseActionFiltersInput>;
+  and?: InputMaybe<Array<InputMaybe<ContentReleasesReleaseFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<ContentReleasesReleaseFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ContentReleasesReleaseFiltersInput>>>;
+  releasedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type ContentReleasesReleaseInput = {
+  actions?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  releasedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type CustomCommentInput = {
   content: Scalars['String']['input'];
   fileId: Scalars['Int']['input'];
@@ -125,6 +227,7 @@ export type DateTimeFilterInput = {
   lt?: InputMaybe<Scalars['DateTime']['input']>;
   lte?: InputMaybe<Scalars['DateTime']['input']>;
   ne?: InputMaybe<Scalars['DateTime']['input']>;
+  nei?: InputMaybe<Scalars['DateTime']['input']>;
   not?: InputMaybe<DateTimeFilterInput>;
   notContains?: InputMaybe<Scalars['DateTime']['input']>;
   notContainsi?: InputMaybe<Scalars['DateTime']['input']>;
@@ -134,6 +237,11 @@ export type DateTimeFilterInput = {
   or?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   startsWith?: InputMaybe<Scalars['DateTime']['input']>;
 };
+
+export enum Enum_Contentreleasesreleaseaction_Type {
+  Publish = 'publish',
+  Unpublish = 'unpublish'
+}
 
 export type FileInfoInput = {
   alternativeText?: InputMaybe<Scalars['String']['input']>;
@@ -155,6 +263,7 @@ export type FloatFilterInput = {
   lt?: InputMaybe<Scalars['Float']['input']>;
   lte?: InputMaybe<Scalars['Float']['input']>;
   ne?: InputMaybe<Scalars['Float']['input']>;
+  nei?: InputMaybe<Scalars['Float']['input']>;
   not?: InputMaybe<FloatFilterInput>;
   notContains?: InputMaybe<Scalars['Float']['input']>;
   notContainsi?: InputMaybe<Scalars['Float']['input']>;
@@ -165,7 +274,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type GenericMorph = Comment | I18NLocale | Song | UploadFile | UploadFolder | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser | Waveform;
+export type GenericMorph = Comment | ContentReleasesRelease | ContentReleasesReleaseAction | I18NLocale | InsightLevel | Song | SongUserInsight | UploadFile | UploadFolder | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser | Waveform;
 
 export type I18NLocale = {
   __typename?: 'I18NLocale';
@@ -217,6 +326,7 @@ export type IdFilterInput = {
   lt?: InputMaybe<Scalars['ID']['input']>;
   lte?: InputMaybe<Scalars['ID']['input']>;
   ne?: InputMaybe<Scalars['ID']['input']>;
+  nei?: InputMaybe<Scalars['ID']['input']>;
   not?: InputMaybe<IdFilterInput>;
   notContains?: InputMaybe<Scalars['ID']['input']>;
   notContainsi?: InputMaybe<Scalars['ID']['input']>;
@@ -225,6 +335,50 @@ export type IdFilterInput = {
   null?: InputMaybe<Scalars['Boolean']['input']>;
   or?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   startsWith?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type InsightLevel = {
+  __typename?: 'InsightLevel';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type InsightLevelEntity = {
+  __typename?: 'InsightLevelEntity';
+  attributes?: Maybe<InsightLevel>;
+  id?: Maybe<Scalars['ID']['output']>;
+};
+
+export type InsightLevelEntityResponse = {
+  __typename?: 'InsightLevelEntityResponse';
+  data?: Maybe<InsightLevelEntity>;
+};
+
+export type InsightLevelEntityResponseCollection = {
+  __typename?: 'InsightLevelEntityResponseCollection';
+  data: Array<InsightLevelEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type InsightLevelFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<InsightLevelFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  description?: InputMaybe<StringFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<InsightLevelFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<InsightLevelFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type InsightLevelInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type IntFilterInput = {
@@ -241,6 +395,7 @@ export type IntFilterInput = {
   lt?: InputMaybe<Scalars['Int']['input']>;
   lte?: InputMaybe<Scalars['Int']['input']>;
   ne?: InputMaybe<Scalars['Int']['input']>;
+  nei?: InputMaybe<Scalars['Int']['input']>;
   not?: InputMaybe<IntFilterInput>;
   notContains?: InputMaybe<Scalars['Int']['input']>;
   notContainsi?: InputMaybe<Scalars['Int']['input']>;
@@ -265,6 +420,7 @@ export type JsonFilterInput = {
   lt?: InputMaybe<Scalars['JSON']['input']>;
   lte?: InputMaybe<Scalars['JSON']['input']>;
   ne?: InputMaybe<Scalars['JSON']['input']>;
+  nei?: InputMaybe<Scalars['JSON']['input']>;
   not?: InputMaybe<JsonFilterInput>;
   notContains?: InputMaybe<Scalars['JSON']['input']>;
   notContainsi?: InputMaybe<Scalars['JSON']['input']>;
@@ -277,10 +433,16 @@ export type JsonFilterInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addSongToLibrary?: Maybe<SongEntityResponse>;
+  calculateFileDuration?: Maybe<UploadFileEntityResponse>;
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
   createComment?: Maybe<CommentEntityResponse>;
+  createContentReleasesRelease?: Maybe<ContentReleasesReleaseEntityResponse>;
+  createContentReleasesReleaseAction?: Maybe<ContentReleasesReleaseActionEntityResponse>;
+  createInsightLevel?: Maybe<InsightLevelEntityResponse>;
   createSong?: Maybe<SongEntityResponse>;
+  createSongUserInsight?: Maybe<SongUserInsightEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
   /** Create a new role */
@@ -289,7 +451,11 @@ export type Mutation = {
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   createWaveform?: Maybe<WaveformEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
+  deleteContentReleasesRelease?: Maybe<ContentReleasesReleaseEntityResponse>;
+  deleteContentReleasesReleaseAction?: Maybe<ContentReleasesReleaseActionEntityResponse>;
+  deleteInsightLevel?: Maybe<InsightLevelEntityResponse>;
   deleteSong?: Maybe<SongEntityResponse>;
+  deleteSongUserInsight?: Maybe<SongUserInsightEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
   /** Delete an existing role */
@@ -309,8 +475,12 @@ export type Mutation = {
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateComment?: Maybe<CommentEntityResponse>;
+  updateContentReleasesRelease?: Maybe<ContentReleasesReleaseEntityResponse>;
+  updateContentReleasesReleaseAction?: Maybe<ContentReleasesReleaseActionEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
+  updateInsightLevel?: Maybe<InsightLevelEntityResponse>;
   updateSong?: Maybe<SongEntityResponse>;
+  updateSongUserInsight?: Maybe<SongUserInsightEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
   updateUploadFolder?: Maybe<UploadFolderEntityResponse>;
   /** Update an existing role */
@@ -319,6 +489,16 @@ export type Mutation = {
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   updateWaveform?: Maybe<WaveformEntityResponse>;
   upload: UploadFileEntityResponse;
+};
+
+
+export type MutationAddSongToLibraryArgs = {
+  songId: Scalars['Int']['input'];
+};
+
+
+export type MutationCalculateFileDurationArgs = {
+  fileId: Scalars['Int']['input'];
 };
 
 
@@ -334,8 +514,28 @@ export type MutationCreateCommentArgs = {
 };
 
 
+export type MutationCreateContentReleasesReleaseArgs = {
+  data: ContentReleasesReleaseInput;
+};
+
+
+export type MutationCreateContentReleasesReleaseActionArgs = {
+  data: ContentReleasesReleaseActionInput;
+};
+
+
+export type MutationCreateInsightLevelArgs = {
+  data: InsightLevelInput;
+};
+
+
 export type MutationCreateSongArgs = {
   data: SongInput;
+};
+
+
+export type MutationCreateSongUserInsightArgs = {
+  data: SongUserInsightInput;
 };
 
 
@@ -369,7 +569,27 @@ export type MutationDeleteCommentArgs = {
 };
 
 
+export type MutationDeleteContentReleasesReleaseArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteContentReleasesReleaseActionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteInsightLevelArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteSongArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteSongUserInsightArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -445,14 +665,38 @@ export type MutationUpdateCommentArgs = {
 };
 
 
+export type MutationUpdateContentReleasesReleaseArgs = {
+  data: ContentReleasesReleaseInput;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateContentReleasesReleaseActionArgs = {
+  data: ContentReleasesReleaseActionInput;
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateFileInfoArgs = {
   id: Scalars['ID']['input'];
   info?: InputMaybe<FileInfoInput>;
 };
 
 
+export type MutationUpdateInsightLevelArgs = {
+  data: InsightLevelInput;
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateSongArgs = {
   data: SongInput;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateSongUserInsightArgs = {
+  data: SongUserInsightInput;
   id: Scalars['ID']['input'];
 };
 
@@ -519,10 +763,18 @@ export type Query = {
   __typename?: 'Query';
   comment?: Maybe<CommentEntityResponse>;
   comments?: Maybe<CommentEntityResponseCollection>;
+  contentReleasesRelease?: Maybe<ContentReleasesReleaseEntityResponse>;
+  contentReleasesReleaseAction?: Maybe<ContentReleasesReleaseActionEntityResponse>;
+  contentReleasesReleaseActions?: Maybe<ContentReleasesReleaseActionEntityResponseCollection>;
+  contentReleasesReleases?: Maybe<ContentReleasesReleaseEntityResponseCollection>;
   i18NLocale?: Maybe<I18NLocaleEntityResponse>;
   i18NLocales?: Maybe<I18NLocaleEntityResponseCollection>;
+  insightLevel?: Maybe<InsightLevelEntityResponse>;
+  insightLevels?: Maybe<InsightLevelEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
   song?: Maybe<SongEntityResponse>;
+  songUserInsight?: Maybe<SongUserInsightEntityResponse>;
+  songUserInsights?: Maybe<SongUserInsightEntityResponseCollection>;
   songs?: Maybe<SongEntityResponseCollection>;
   uploadFile?: Maybe<UploadFileEntityResponse>;
   uploadFiles?: Maybe<UploadFileEntityResponseCollection>;
@@ -550,6 +802,30 @@ export type QueryCommentsArgs = {
 };
 
 
+export type QueryContentReleasesReleaseArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryContentReleasesReleaseActionArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryContentReleasesReleaseActionsArgs = {
+  filters?: InputMaybe<ContentReleasesReleaseActionFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryContentReleasesReleasesArgs = {
+  filters?: InputMaybe<ContentReleasesReleaseFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
 export type QueryI18NLocaleArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
@@ -562,8 +838,34 @@ export type QueryI18NLocalesArgs = {
 };
 
 
+export type QueryInsightLevelArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryInsightLevelsArgs = {
+  filters?: InputMaybe<InsightLevelFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
 export type QuerySongArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QuerySongUserInsightArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QuerySongUserInsightsArgs = {
+  filters?: InputMaybe<SongUserInsightFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -645,7 +947,9 @@ export type Song = {
   comments?: Maybe<CommentRelationResponseCollection>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  inLibrary?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  owners?: Maybe<UsersPermissionsUserRelationResponseCollection>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   users?: Maybe<UsersPermissionsUserRelationResponseCollection>;
@@ -663,6 +967,13 @@ export type SongCommentsArgs = {
   filters?: InputMaybe<CommentFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type SongOwnersArgs = {
+  filters?: InputMaybe<UsersPermissionsUserFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
@@ -699,6 +1010,7 @@ export type SongFiltersInput = {
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<SongFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<SongFiltersInput>>>;
+  owners?: InputMaybe<UsersPermissionsUserFiltersInput>;
   publishedAt?: InputMaybe<DateTimeFilterInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   users?: InputMaybe<UsersPermissionsUserFiltersInput>;
@@ -709,6 +1021,7 @@ export type SongInput = {
   comments?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  owners?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
   users?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
 };
@@ -716,6 +1029,58 @@ export type SongInput = {
 export type SongRelationResponseCollection = {
   __typename?: 'SongRelationResponseCollection';
   data: Array<SongEntity>;
+};
+
+export type SongUserInsight = {
+  __typename?: 'SongUserInsight';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  insight_level?: Maybe<InsightLevelEntityResponse>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  song?: Maybe<SongEntityResponse>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  user?: Maybe<UsersPermissionsUserEntityResponse>;
+};
+
+export type SongUserInsightEntity = {
+  __typename?: 'SongUserInsightEntity';
+  attributes?: Maybe<SongUserInsight>;
+  id?: Maybe<Scalars['ID']['output']>;
+};
+
+export type SongUserInsightEntityResponse = {
+  __typename?: 'SongUserInsightEntityResponse';
+  data?: Maybe<SongUserInsightEntity>;
+};
+
+export type SongUserInsightEntityResponseCollection = {
+  __typename?: 'SongUserInsightEntityResponseCollection';
+  data: Array<SongUserInsightEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type SongUserInsightFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<SongUserInsightFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  insight_level?: InputMaybe<InsightLevelFiltersInput>;
+  not?: InputMaybe<SongUserInsightFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<SongUserInsightFiltersInput>>>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  song?: InputMaybe<SongFiltersInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  user?: InputMaybe<UsersPermissionsUserFiltersInput>;
+};
+
+export type SongUserInsightInput = {
+  insight_level?: InputMaybe<Scalars['ID']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  song?: InputMaybe<Scalars['ID']['input']>;
+  user?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type SongUserInsightRelationResponseCollection = {
+  __typename?: 'SongUserInsightRelationResponseCollection';
+  data: Array<SongUserInsightEntity>;
 };
 
 export type StringFilterInput = {
@@ -732,6 +1097,7 @@ export type StringFilterInput = {
   lt?: InputMaybe<Scalars['String']['input']>;
   lte?: InputMaybe<Scalars['String']['input']>;
   ne?: InputMaybe<Scalars['String']['input']>;
+  nei?: InputMaybe<Scalars['String']['input']>;
   not?: InputMaybe<StringFilterInput>;
   notContains?: InputMaybe<Scalars['String']['input']>;
   notContainsi?: InputMaybe<Scalars['String']['input']>;
@@ -1069,8 +1435,10 @@ export type UsersPermissionsUser = {
   confirmed?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
+  owned_songs?: Maybe<SongRelationResponseCollection>;
   provider?: Maybe<Scalars['String']['output']>;
   role?: Maybe<UsersPermissionsRoleEntityResponse>;
+  song_insights?: Maybe<SongUserInsightRelationResponseCollection>;
   songs?: Maybe<SongRelationResponseCollection>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   username: Scalars['String']['output'];
@@ -1079,6 +1447,22 @@ export type UsersPermissionsUser = {
 
 export type UsersPermissionsUserCommentsArgs = {
   filters?: InputMaybe<CommentFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type UsersPermissionsUserOwned_SongsArgs = {
+  filters?: InputMaybe<SongFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type UsersPermissionsUserSong_InsightsArgs = {
+  filters?: InputMaybe<SongUserInsightFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   publicationState?: InputMaybe<PublicationState>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -1120,10 +1504,12 @@ export type UsersPermissionsUserFiltersInput = {
   id?: InputMaybe<IdFilterInput>;
   not?: InputMaybe<UsersPermissionsUserFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<UsersPermissionsUserFiltersInput>>>;
+  owned_songs?: InputMaybe<SongFiltersInput>;
   password?: InputMaybe<StringFilterInput>;
   provider?: InputMaybe<StringFilterInput>;
   resetPasswordToken?: InputMaybe<StringFilterInput>;
   role?: InputMaybe<UsersPermissionsRoleFiltersInput>;
+  song_insights?: InputMaybe<SongUserInsightFiltersInput>;
   songs?: InputMaybe<SongFiltersInput>;
   updatedAt?: InputMaybe<DateTimeFilterInput>;
   username?: InputMaybe<StringFilterInput>;
@@ -1135,10 +1521,12 @@ export type UsersPermissionsUserInput = {
   confirmationToken?: InputMaybe<Scalars['String']['input']>;
   confirmed?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  owned_songs?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   password?: InputMaybe<Scalars['String']['input']>;
   provider?: InputMaybe<Scalars['String']['input']>;
   resetPasswordToken?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<Scalars['ID']['input']>;
+  song_insights?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   songs?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1194,7 +1582,14 @@ export type GetSongsQueryVariables = Exact<{
 }>;
 
 
-export type GetSongsQuery = { __typename?: 'Query', songs?: { __typename?: 'SongEntityResponseCollection', data: Array<{ __typename?: 'SongEntity', id?: string | null, attributes?: { __typename?: 'Song', name?: string | null, description?: string | null, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, audio?: { __typename?: 'UploadFileRelationResponseCollection', data: Array<{ __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, alternativeText?: string | null, caption?: string | null, url: string, duration?: number | null } | null }> } | null } | null }> } | null };
+export type GetSongsQuery = { __typename?: 'Query', songs?: { __typename?: 'SongEntityResponseCollection', data: Array<{ __typename?: 'SongEntity', id?: string | null, attributes?: { __typename?: 'Song', name?: string | null, description?: string | null, inLibrary?: boolean | null, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, audio?: { __typename?: 'UploadFileRelationResponseCollection', data: Array<{ __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, alternativeText?: string | null, caption?: string | null, url: string, duration?: number | null } | null }> } | null } | null }> } | null };
+
+export type GetLibraryQueryVariables = Exact<{
+  pagination?: InputMaybe<PaginationArg>;
+}>;
+
+
+export type GetLibraryQuery = { __typename?: 'Query', songs?: { __typename?: 'SongEntityResponseCollection', data: Array<{ __typename?: 'SongEntity', id?: string | null, attributes?: { __typename?: 'Song', createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, name?: string | null, description?: string | null, inLibrary?: boolean | null, audio?: { __typename?: 'UploadFileRelationResponseCollection', data: Array<{ __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', createdAt?: any | null, updatedAt?: any | null, name: string, url: string, duration?: number | null, waveform?: { __typename?: 'WaveformEntityResponse', data?: { __typename?: 'WaveformEntity', id?: string | null, attributes?: { __typename?: 'Waveform', peaks?: any | null } | null } | null } | null } | null }> } | null } | null }> } | null };
 
 export type GetSongQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1212,6 +1607,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UsersPermissionsLoginPayload', jwt?: string | null, user: { __typename?: 'UsersPermissionsMe', id: string, username: string, email?: string | null, confirmed?: boolean | null } } };
 
+export type AddToLibraryMutationVariables = Exact<{
+  songId: Scalars['Int']['input'];
+}>;
+
+
+export type AddToLibraryMutation = { __typename?: 'Mutation', addSongToLibrary?: { __typename?: 'SongEntityResponse', data?: { __typename?: 'SongEntity', id?: string | null, attributes?: { __typename?: 'Song', name?: string | null, description?: string | null, inLibrary?: boolean | null, createdAt?: any | null, updatedAt?: any | null, publishedAt?: any | null, audio?: { __typename?: 'UploadFileRelationResponseCollection', data: Array<{ __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, alternativeText?: string | null, caption?: string | null, url: string, duration?: number | null } | null }> } | null } | null } | null } | null };
+
 export type CreateCommentMutationVariables = Exact<{
   content: Scalars['String']['input'];
   songId: Scalars['Int']['input'];
@@ -1223,7 +1625,9 @@ export type CreateCommentMutationVariables = Exact<{
 export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null, attributes?: { __typename?: 'Comment', content?: string | null, fileId: number, timeRange: string, user?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null } | null } | null } | null } | null } | null };
 
 
-export const GetSongsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSongs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationArg"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"songs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pagination"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"audio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alternativeText"}},{"kind":"Field","name":{"kind":"Name","value":"caption"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSongsQuery, GetSongsQueryVariables>;
+export const GetSongsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSongs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationArg"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"songs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pagination"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"audio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alternativeText"}},{"kind":"Field","name":{"kind":"Name","value":"caption"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"inLibrary"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSongsQuery, GetSongsQueryVariables>;
+export const GetLibraryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLibrary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationArg"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"songs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pagination"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"inLibrary"}},{"kind":"Field","name":{"kind":"Name","value":"audio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}},{"kind":"Field","name":{"kind":"Name","value":"waveform"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"peaks"}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetLibraryQuery, GetLibraryQueryVariables>;
 export const GetSongDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSong"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"song"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"audio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alternativeText"}},{"kind":"Field","name":{"kind":"Name","value":"caption"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"formats"}},{"kind":"Field","name":{"kind":"Name","value":"hash"}},{"kind":"Field","name":{"kind":"Name","value":"ext"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"previewUrl"}},{"kind":"Field","name":{"kind":"Name","value":"provider"}},{"kind":"Field","name":{"kind":"Name","value":"provider_metadata"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"waveform"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"peaks"}}]}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileId"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"timeRange"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSongQuery, GetSongQueryVariables>;
 export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"jwt"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"confirmed"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;
+export const AddToLibraryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddToLibrary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"songId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addSongToLibrary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"songId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"songId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"inLibrary"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"audio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alternativeText"}},{"kind":"Field","name":{"kind":"Name","value":"caption"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AddToLibraryMutation, AddToLibraryMutationVariables>;
 export const CreateCommentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateComment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"songId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fileId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"timeRange"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TimeRange"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createComment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"songId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"songId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"fileId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fileId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"timeRange"},"value":{"kind":"Variable","name":{"kind":"Name","value":"timeRange"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"fileId"}},{"kind":"Field","name":{"kind":"Name","value":"timeRange"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CreateCommentMutation, CreateCommentMutationVariables>;
