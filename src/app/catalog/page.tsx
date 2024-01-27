@@ -23,6 +23,7 @@ const GET_SONGS = graphql(`
               }
             }
           }
+          inLibrary
           createdAt
           updatedAt
           publishedAt
